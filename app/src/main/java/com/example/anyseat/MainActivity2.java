@@ -2,7 +2,9 @@ package com.example.anyseat;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,6 +24,8 @@ public class MainActivity2 extends AppCompatActivity {
     String Password;
     
     private TextView main_tv;
+    Button refresh;
+    Button search;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,8 @@ public class MainActivity2 extends AppCompatActivity {
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         main_tv = findViewById(R.id.main_text);
+        refresh = findViewById(R.id.refresh);
+        search = findViewById(R.id.search);
 
         crewFragment = new CrewFragment();
         boardFragment = new BoardFragment();
@@ -54,6 +60,8 @@ public class MainActivity2 extends AppCompatActivity {
                         getSupportFragmentManager().beginTransaction().
                                 replace(R.id.main_frame_layout, homeFragment)
                                 .commitAllowingStateLoss();
+                        refresh.setVisibility(View.INVISIBLE);
+                        search.setVisibility(View.INVISIBLE);
                         return true;
 
                     case R.id.tab1:
@@ -61,6 +69,8 @@ public class MainActivity2 extends AppCompatActivity {
                         getSupportFragmentManager().beginTransaction().
                                 replace(R.id.main_frame_layout, seatFragment)
                                 .commitAllowingStateLoss();
+                        refresh.setVisibility(View.VISIBLE);
+                        search.setVisibility(View.INVISIBLE);
                         return true;
 
                     /*case R.id.tab2:
@@ -80,7 +90,8 @@ public class MainActivity2 extends AppCompatActivity {
                         getSupportFragmentManager().beginTransaction().
                                 replace(R.id.main_frame_layout, boardFragment)
                                 .commitAllowingStateLoss();
-
+                        refresh.setVisibility(View.VISIBLE);
+                        search.setVisibility(View.VISIBLE);
 
                         return true;
 
@@ -89,6 +100,8 @@ public class MainActivity2 extends AppCompatActivity {
                         getSupportFragmentManager().beginTransaction().
                                 replace(R.id.main_frame_layout, alramFragment)
                                 .commitAllowingStateLoss();
+                        refresh.setVisibility(View.INVISIBLE);
+                        search.setVisibility(View.INVISIBLE);
 
 
                         return true;
