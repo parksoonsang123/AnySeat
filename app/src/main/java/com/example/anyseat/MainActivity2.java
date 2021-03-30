@@ -23,7 +23,6 @@ public class MainActivity2 extends AppCompatActivity {
     SeatFragment seatFragment;
     AlramFragment alramFragment;
     String Password;
-    
     private TextView main_tv;
     Button main_btn;
     
@@ -49,6 +48,8 @@ public class MainActivity2 extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().
                 replace(R.id.main_frame_layout, homeFragment)
                 .commitAllowingStateLoss();
+
+
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override

@@ -20,8 +20,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private CheckBox KeepLoginCheck;
     public static Context context;
     public int var;
+
+    private ArrayList<UserInfo> Users = new ArrayList<>();
 
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl("https://anyseat-4e964-default-rtdb.firebaseio.com/");
     DatabaseReference userRef = mDatabase.child("user");
@@ -59,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         TextView register = (TextView)findViewById(R.id.register);
+        TextView finduser = (TextView) findViewById(R.id.FindUser);
         Button loginbutton = (Button)findViewById(R.id.loginButton);
         useremail = (TextView) findViewById(R.id.user_email_text);
         userpassword = (TextView) findViewById(R.id.user_password_text);
@@ -100,6 +108,15 @@ public class MainActivity extends AppCompatActivity {
                 signIn(email, password);
             }
         });
+
+        //아이디/비밀번호 찾기
+        finduser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, FindUserActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -111,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void signIn(final String email, final String password){
         //firebase 로그인
+
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
