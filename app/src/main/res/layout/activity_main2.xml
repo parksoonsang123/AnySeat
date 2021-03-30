@@ -20,29 +20,25 @@
             android:layout_height="wrap_content"
             android:text="홈"
             android:layout_gravity="left"
+            android:layout_marginLeft="10dp"
             android:textColor="#000000"
             android:textStyle="bold"
             android:textSize="25dp"/>
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
+       <View
+           android:layout_width="0dp"
+           android:layout_height="0dp"
+           android:layout_weight="1"/>
 
         <Button
-            android:id="@+id/refresh"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_gravity="right"
-            android:background="@drawable/ic_baseline_refresh_24"
-            android:visibility="invisible"/>
-        <Button
-            android:id="@+id/search"
+            android:id="@+id/main_btn"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_gravity="right"
             android:background="@drawable/ic_baseline_search_24"
+            android:layout_marginRight="20dp"
             android:visibility="invisible"/>
+
 
     </LinearLayout>
 
@@ -56,6 +52,7 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
+        android:background="#ffffff"
         android:layout_gravity="bottom"
         app:menu="@menu/menu_bottom"
         app:itemIconTint="@drawable/item_color"

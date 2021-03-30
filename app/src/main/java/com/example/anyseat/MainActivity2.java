@@ -1,5 +1,6 @@
 package com.example.anyseat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,8 +25,7 @@ public class MainActivity2 extends AppCompatActivity {
     String Password;
     
     private TextView main_tv;
-    Button refresh;
-    Button search;
+    Button main_btn;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +37,7 @@ public class MainActivity2 extends AppCompatActivity {
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         main_tv = findViewById(R.id.main_text);
-        refresh = findViewById(R.id.refresh);
-        search = findViewById(R.id.search);
+        main_btn = findViewById(R.id.main_btn);
 
         crewFragment = new CrewFragment();
         boardFragment = new BoardFragment();
@@ -60,8 +59,7 @@ public class MainActivity2 extends AppCompatActivity {
                         getSupportFragmentManager().beginTransaction().
                                 replace(R.id.main_frame_layout, homeFragment)
                                 .commitAllowingStateLoss();
-                        refresh.setVisibility(View.INVISIBLE);
-                        search.setVisibility(View.INVISIBLE);
+                        main_btn.setVisibility(View.INVISIBLE);
                         return true;
 
                     case R.id.tab1:
@@ -69,8 +67,7 @@ public class MainActivity2 extends AppCompatActivity {
                         getSupportFragmentManager().beginTransaction().
                                 replace(R.id.main_frame_layout, seatFragment)
                                 .commitAllowingStateLoss();
-                        refresh.setVisibility(View.VISIBLE);
-                        search.setVisibility(View.INVISIBLE);
+                        main_btn.setVisibility(View.INVISIBLE);
                         return true;
 
                     /*case R.id.tab2:
@@ -90,9 +87,15 @@ public class MainActivity2 extends AppCompatActivity {
                         getSupportFragmentManager().beginTransaction().
                                 replace(R.id.main_frame_layout, boardFragment)
                                 .commitAllowingStateLoss();
-                        refresh.setVisibility(View.VISIBLE);
-                        search.setVisibility(View.VISIBLE);
-
+                        main_btn.setVisibility(View.VISIBLE);
+                        main_btn.setBackgroundResource(R.drawable.ic_baseline_search_24);
+                        main_btn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(MainActivity2.this, SearchActivity.class);
+                                startActivity(intent);
+                            }
+                        });
                         return true;
 
                     case R.id.tab5:
@@ -100,10 +103,7 @@ public class MainActivity2 extends AppCompatActivity {
                         getSupportFragmentManager().beginTransaction().
                                 replace(R.id.main_frame_layout, alramFragment)
                                 .commitAllowingStateLoss();
-                        refresh.setVisibility(View.INVISIBLE);
-                        search.setVisibility(View.INVISIBLE);
-
-
+                        main_btn.setVisibility(View.INVISIBLE);
                         return true;
                 }
                 return false;

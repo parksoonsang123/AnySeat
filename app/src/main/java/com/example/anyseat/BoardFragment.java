@@ -23,6 +23,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.function.Function;
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
+import java.util.function.ToLongFunction;
 
 
 public class BoardFragment extends Fragment {
@@ -74,6 +80,8 @@ public class BoardFragment extends Fragment {
                     PostItem item1 = snapshot1.getValue(PostItem.class);
                     list.add(new PostItem(item1.getCommentcnt(), item1.getGoodcnt(), item1.getTitle(), item1.getContents(), item1.getWritetime(), item1.getPostid(), item1.getUserid(), item1.getImageexist(), item1.getImageurilist(), item1.getImagenamelist(), Code.ViewType.FIRST));
                 }
+
+                Collections.sort(list, new Ascending());
 
                 adapter = new FreeBoardAdapter(list, userId);
                 adapter.setOnDeleteClickListener2(new FreeBoardAdapter.OnDeleteClickListner2() {
@@ -171,5 +179,14 @@ public class BoardFragment extends Fragment {
         else{
             postdelete(position);
         }
+    }
+
+    class Ascending implements Comparator<PostItem> {
+
+        @Override
+        public int compare(PostItem o1, PostItem o2) {
+            return o2.getWritetime().compareTo(o1.getWritetime());
+        }
+
     }
 }
