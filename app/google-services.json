@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "250158547065",
+    "project_id": "anyseat-4e964",
+    "storage_bucket": "anyseat-4e964.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:250158547065:android:2c43d0b716567dbaefd4a8",
+        "android_client_info": {
+          "package_name": "com.example.anyseat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "250158547065-bl1n00p0ddmgapll7vf2pl7pfh63n2iv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.anyseat",
+            "certificate_hash": "02f14163297096fbb84b8e784b5ccbc44bdafa10"
+          }
+        },
+        {
+          "client_id": "250158547065-21iq5a1fjhniql36976bergmsd8fs47h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcJPu--bgFiWGEkOkZ3jySyIEz1lfrTfo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "250158547065-21iq5a1fjhniql36976bergmsd8fs47h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

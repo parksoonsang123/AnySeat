@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">AnySeat</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string-array name="CoronaCheck">
+        <item>"1.현재 자가격리대상입니까?"</item>
+        <item>"2.현재 가족 혹은 일상적 접촉이 잦은 지인 중에 코로나19(의심)환자, 자가격리대상자가 있습니까?"</item>
+        <item>"3.현재 아래와 같은 증상이 있습니까?(중복체크 가능)"</item>
+    </string-array>
+</resources>

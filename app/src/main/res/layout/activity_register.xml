@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".RegisterActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/colorPrimary">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="회원가입"
+            android:textColor="#ffffff"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <EditText
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:hint="이름"
+            android:layout_gravity="center"
+            android:padding="10dp"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff"
+            android:id="@+id/nameText"
+            android:drawableStart="@drawable/ic_baseline_child_care_24"
+            android:drawableLeft="@drawable/ic_baseline_child_care_24"
+            android:layout_marginTop="50dp"
+            android:background="@color/colorPrimary"/>
+
+        <EditText
+            android:id="@+id/emailText"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="50dp"
+            android:background="@color/colorPrimary"
+            android:drawableStart="@drawable/ic_baseline_person_24"
+            android:drawableLeft="@drawable/ic_baseline_person_24"
+            android:hint="Email"
+            android:padding="10dp"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff" />
+
+        <EditText
+            android:inputType="textPassword"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:layout_gravity="center"
+            android:padding="10dp"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff"
+            android:id="@+id/user_password_text"
+            android:drawableStart="@drawable/ic_baseline_lock_24"
+            android:drawableLeft="@drawable/ic_baseline_lock_24"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorPrimary"/>
+
+        <RadioGroup
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/gradeGroup"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="1학년"
+                android:id="@+id/firstGrade"
+                android:layout_weight="1"
+                android:checked="true"/>
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="2학년"
+                android:id="@+id/secondGrade"
+                android:layout_weight="1" />
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="3학년"
+                android:id="@+id/thirdGrade"
+                android:layout_weight="1"/>
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="4학년"
+                android:id="@+id/forthGrade"
+                android:layout_weight="1"/>
+        </RadioGroup>
+
+
+        <Button
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="#ffffff"
+            android:text="가입하기"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:id="@+id/signButton"/>
+
+    </LinearLayout>
+</LinearLayout>

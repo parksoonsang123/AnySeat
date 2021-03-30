@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/customborder"
+        android:orientation="vertical"
+        android:layout_marginBottom="30dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+
+
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_baseline_person_24" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:layout_marginTop="10dp"
+                    android:text="익명" />
+
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/freeboarddetail_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:text="올린 시간" />
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/freeboarddetail_goodbtn"
+                android:layout_width="60dp"
+                android:layout_height="35dp"
+                android:layout_gravity="right"
+                android:background="@drawable/customborder"
+                android:text="좋아요"
+                android:textSize="10dp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/freeboarddetail_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="제목"
+            android:textSize="30dp" />
+
+        <TextView
+            android:id="@+id/freeboarddetail_contents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="내용"
+            android:textSize="20dp" />
+
+        <!--<ImageView
+            android:id="@+id/freeboarddetail_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>-->
+
+        <!--<androidx.viewpager.widget.ViewPager
+            android:id="@+id/freeboarddetail_viewpager"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"/>-->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/freeboarddetail_rv"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"/>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="6dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="right"
+                android:layout_marginRight="1dp"
+                android:background="@drawable/good_btn" />
+
+            <TextView
+                android:id="@+id/freeboarddetail_goodcnt"
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:layout_gravity="right"
+                android:text="0"
+                android:textColor="#F86363"
+                android:textSize="10dp" />
+
+            <Button
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="right"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="1dp"
+                android:background="@drawable/comment_btn" />
+
+            <TextView
+                android:id="@+id/freeboarddetail_commentcnt"
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:layout_gravity="right"
+                android:text="0"
+                android:textColor="#6DD2FF"
+                android:textSize="10dp" />
+
+            <Button
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="right"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="1dp"
+                android:background="@drawable/ic_baseline_image_24" />
+
+            <TextView
+                android:id="@+id/freeboarddetail_imagecnt"
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:layout_gravity="right"
+                android:text="0"
+                android:textColor="#FFEB3B"
+                android:textSize="10dp" />
+
+
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
