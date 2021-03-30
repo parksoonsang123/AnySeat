@@ -220,6 +220,57 @@ public class HomeFragment extends Fragment {
         });
 */
 
+        // 오픈채팅
+        Button OpenKakaoButton = (Button)view.findViewById(R.id.OpenChatButton);
+        OpenKakaoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent ChatUrl = new Intent(Intent.ACTION_VIEW, Uri.parse("https://open.kakao.com/o/sULfouRc/"));
+                startActivity(ChatUrl);
+            }
+        });
+
+        // 조직도
+        Button Organizatino_Button = (Button)view.findViewById(R.id.Organization_Button);
+        Organizatino_Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(view.getContext(), Organization.class);
+                startActivity(intent);
+            }
+        });
+
+        // 과사 시간표
+        Button OfficeTimeTable_Button = (Button)view.findViewById(R.id.OfficeTimeTable);
+        OfficeTimeTable_Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialog dialog = new Dialog(view.getContext());
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.timetabledialog);
+                dialog.show();
+            }
+        });
+
+        Button OfficeNotice_Button = (Button)view.findViewById(R.id.OfficeNotice);
+        OfficeNotice_Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(view.getContext(), NoticeActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // 로그아웃
+        Button LogOutButton = (Button)view.findViewById(R.id.LogOutButton);
+        LogOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SaveSharedPreference.setUserName(((MainActivity)MainActivity.context), "", "", false);
+                getActivity().finish();
+            }
+        });
+
 
         return view;
     }

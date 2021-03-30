@@ -51,12 +51,12 @@ public class FreeBoardAdapter extends RecyclerView.Adapter<FreeBoardAdapter.View
         holder.freeboard_commentcnt1.setText(item1.getCommentcnt()+"");
         holder.freeboard_imagecnt1.setText(item1.getImageurilist().size()+"");
 
-        if(mDataList.get(position).getUserid().equals(cui)){
+        /*if(mDataList.get(position).getUserid().equals(cui)){
             holder.delbtn.setVisibility(View.VISIBLE);
         }
         else{
             holder.delbtn.setVisibility(View.GONE);
-        }
+        }*/
 
         holder.freeboard_title1.setTag(position);
         holder.freeboard_contents1.setTag(position);
@@ -78,7 +78,7 @@ public class FreeBoardAdapter extends RecyclerView.Adapter<FreeBoardAdapter.View
         TextView freeboard_goodcnt1;
         TextView freeboard_commentcnt1;
         TextView freeboard_imagecnt1;
-        Button delbtn;
+        //Button delbtn;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -89,7 +89,7 @@ public class FreeBoardAdapter extends RecyclerView.Adapter<FreeBoardAdapter.View
             freeboard_goodcnt1 = itemView.findViewById(R.id.freeboard_goodcnt);
             freeboard_commentcnt1 = itemView.findViewById(R.id.freeboard_commentcnt);
             freeboard_imagecnt1 = itemView.findViewById(R.id.freeboard_imagecnt);
-            delbtn = itemView.findViewById(R.id.freeboard_del_btn);
+            /*delbtn = itemView.findViewById(R.id.freeboard_del_btn);
             delbtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -100,7 +100,7 @@ public class FreeBoardAdapter extends RecyclerView.Adapter<FreeBoardAdapter.View
                         }
                     }
                 }
-            });
+            });*/
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -1,7 +1,9 @@
 package com.example.anyseat;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -56,10 +59,15 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private FreeBoardDetailItemViewPagerAdapter viewPagerAdapter;
 
+    Button pb;
+    Button nb;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_free_board_detail);
+
+
 
         userId = mAuth.getCurrentUser().getUid();
 
@@ -159,10 +167,32 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                                 });
                                 adapter.setOnDeleteClickListener(new FreeBoardDetailAdapter.OnDeleteClickListner() {
                                     @Override
-                                    public void onDeleteClick(View v, int position, Button btn) {
+                                    public void onDeleteClick(View v, final int position, Button btn) {
                                         Intent intent = getIntent();
-                                        String postId = intent.getStringExtra("id");
-                                        commentdelete(postId, position);
+                                        final String postId = intent.getStringExtra("id");
+
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext(), R.style.MyDialogTheme);
+
+
+                                        builder.setMessage("삭제하시겠습니까?");
+
+
+                                        builder.setPositiveButton("확인",
+                                                new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        commentdelete(postId, position);
+                                                    }
+                                                });
+                                        builder.setNegativeButton("취소",
+                                                new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                    }
+                                                });
+                                        builder.show();
+
                                         //commentminus(postid);
                                     }
                                 });
@@ -247,10 +277,29 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                                         });
                                         adapter.setOnDeleteClickListener(new FreeBoardDetailAdapter.OnDeleteClickListner() {
                                             @Override
-                                            public void onDeleteClick(View v, int position, Button btn) {
+                                            public void onDeleteClick(View v, final int position, Button btn) {
                                                 Intent intent = getIntent();
-                                                String postId = intent.getStringExtra("id");
-                                                commentdelete(postId, position);
+                                                final String postId = intent.getStringExtra("id");
+
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext(), R.style.MyDialogTheme);
+                                                builder.setMessage("삭제하시겠습니까?");
+
+
+                                                builder.setPositiveButton("확인",
+                                                        new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                commentdelete(postId, position);
+                                                            }
+                                                        });
+                                                builder.setNegativeButton("취소",
+                                                        new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
+
+                                                            }
+                                                        });
+                                                builder.show();
                                             }
                                         });
                                         recyclerView.setAdapter(adapter);

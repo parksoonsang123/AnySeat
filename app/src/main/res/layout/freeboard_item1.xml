@@ -25,12 +25,12 @@
             android:layout_height="0dp"
             android:layout_weight="1"/>
         
-        <Button
+        <!--<Button
             android:id="@+id/freeboard_del_btn"
             android:layout_width="15dp"
             android:layout_height="20dp"
             android:background="@drawable/ic_baseline_delete_forever_24"
-            android:visibility="gone"/>
+            android:visibility="gone"/>-->
 
     </LinearLayout>
     

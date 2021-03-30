@@ -179,7 +179,7 @@ public class SeatFragment extends Fragment {
 
         //  mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        // 오픈채팅
+       /* // 오픈채팅
         Button OpenKakaoButton = (Button)view.findViewById(R.id.OpenChatButton);
         OpenKakaoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -228,7 +228,7 @@ public class SeatFragment extends Fragment {
                 SaveSharedPreference.setUserName(((MainActivity)MainActivity.context), "", "", false);
                 getActivity().finish();
             }
-        });
+        });*/
 
 
         return view;

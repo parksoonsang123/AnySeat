@@ -22,6 +22,7 @@ public class MainActivity2 extends AppCompatActivity {
     HomeFragment homeFragment;
     SeatFragment seatFragment;
     AlramFragment alramFragment;
+    MyPageFragment myPageFragment;
     String Password;
     private TextView main_tv;
     Button main_btn;
@@ -44,6 +45,7 @@ public class MainActivity2 extends AppCompatActivity {
         homeFragment = new HomeFragment();
         seatFragment = new SeatFragment(Password);
         alramFragment = new AlramFragment();
+        myPageFragment = new MyPageFragment();
 
         getSupportFragmentManager().beginTransaction().
                 replace(R.id.main_frame_layout, homeFragment)

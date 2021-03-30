@@ -73,13 +73,13 @@ public class FreeBoardActivity extends AppCompatActivity {
                 }
 
                 adapter = new FreeBoardAdapter(list, userId);
-                adapter.setOnDeleteClickListener2(new FreeBoardAdapter.OnDeleteClickListner2() {
+                /*adapter.setOnDeleteClickListener2(new FreeBoardAdapter.OnDeleteClickListner2() {
                     @Override
                     public void onDeleteClick2(View v, int position, Button btn) {
                         //댓글 -> 이미지 -> 좋아요 -> 포스트 삭제
                         commentsdelete(position);
                     }
-                });
+                });*/
                 freeboardRecyclerView.setAdapter(adapter);
 
             }
