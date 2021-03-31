@@ -2,7 +2,6 @@ package com.example.anyseat;
 
 public class SeatInfo {
     public int num;
-    public String seatnum;
     public String user;
     public String status;
     public int statusnum; //0:사람없음 1:사람있음
@@ -17,10 +16,6 @@ public class SeatInfo {
 
     public void setNum(int num) {
         this.num = num;
-    }
-
-    public void setSeatnum(String seatnum) {
-        this.seatnum = seatnum;
     }
 
     public String getUser() {
@@ -50,45 +45,6 @@ public class SeatInfo {
     public SeatInfo(int num, int status, String user) {
         this.num = num;
 
-        switch (num){
-            case R.id.L11:
-                seatnum = "L1-1";
-                break;
-            case R.id.L12:
-                seatnum = "L1-2";
-                break;
-            case R.id.L21:
-                seatnum = "L2-1";
-                break;
-            case R.id.L22:
-                seatnum = "L2-2";
-                break;
-            case R.id.L31:
-                seatnum = "L3-1";
-                break;
-            case R.id.L32:
-                seatnum = "L3-2";
-                break;
-            case R.id.L41:
-                seatnum = "L4-1";
-                break;
-            case R.id.L42:
-                seatnum = "L4-2";
-                break;
-            case R.id.R1:
-                seatnum = "R1";
-                break;
-            case R.id.R2:
-                seatnum = "R2";
-                break;
-            case R.id.R3:
-                seatnum = "R3";
-                break;
-            case R.id.R4:
-                seatnum = "R4";
-                break;
-        }
-
         this.statusnum = status;
         if(statusnum == 0) {
             this.status = "off";
@@ -100,7 +56,6 @@ public class SeatInfo {
         }
     }
 
-    public String getSeatnum(){ return seatnum; }
 
     public boolean equals(String s){
         if(user.equals(s)) return true;
@@ -111,7 +66,6 @@ public class SeatInfo {
     public String toString() {
         return "SeatInfo{" +
                 "user='" + user + '\'' +
-                "seatnum='" + seatnum + '\'' +
                 ", status='" + status + '\'' +
                 '}';
     }

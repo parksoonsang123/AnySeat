@@ -5,36 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#e4ebf9"
     tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="225dp"
-        android:orientation="vertical"
-        android:background="@color/colorPrimary">
-        <TextView
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="경북대학교 모바일공학과"
-            android:textColor="#ffffff"
-            android:textSize="25dp"
-            android:textStyle="bold"
-            android:layout_marginTop="10dp"></TextView>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="즐거운 과생활"
-            android:textColor="#ffffff"
-            android:textSize="18dp"
-            android:textStyle="bold"
-            android:layout_marginTop="10dp"></TextView>
+            android:src="@drawable/sme_logo"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <EditText
@@ -43,13 +32,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="50dp"
-            android:background="@color/colorPrimary"
-            android:drawableStart="@drawable/ic_baseline_person_24"
-            android:drawableLeft="@drawable/ic_baseline_person_24"
+            android:background="#FFFFFF"
             android:hint="E-Mail"
             android:padding="10dp"
-            android:textColor="#ffffff"
-            android:textColorHint="#ffffff" />
+            android:textColor="#000000"
+            android:textColorHint="#808080" />
 
         <EditText
             android:id="@+id/user_password_text"
@@ -57,46 +44,44 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:background="@color/colorPrimary"
-            android:drawableStart="@drawable/ic_baseline_lock_24"
-            android:drawableLeft="@drawable/ic_baseline_lock_24"
+            android:background="#FFFFFF"
             android:hint="Password"
             android:inputType="textPassword"
             android:padding="10dp"
-            android:textColor="#ffffff"
-            android:textColorHint="#ffffff" />
+            android:textColor="#000000"
+            android:textColorHint="#808080" />
 
-        <LinearLayout
+        <CheckBox
+            android:id="@+id/KeepLoginCheck"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_gravity="center">
-
-            <CheckBox
-                android:id="@+id/KeepLoginCheck"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="로그인 상태 유지" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/loginButton"
-            android:layout_width="280dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:background="@color/colorPrimaryDark"
-            android:text="로그인"
-            android:textColor="#ffffff"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+            android:buttonTint="#808080"
+            android:text="자동로그인"
+            android:textColor="#808080" />
+
+        <ImageView
+            android:id="@+id/loginButton"
+            android:layout_width="196dp"
+            android:layout_height="49dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/loginbutton" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="15dp">
+            android:layout_marginTop="25dp">
 
             <TextView
                 android:id="@+id/FindUser"
@@ -104,6 +89,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="아이디/비밀번호 찾기"
+                android:textColor="#808080"
+                android:textSize="15sp"
                 android:layout_weight="1"/>
 
             <TextView
@@ -112,7 +99,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="회원가입"
-                android:textSize="18dp"
+                android:textSize="15sp"
+                android:textColor="#808080"
                 android:layout_weight="1"
                 android:gravity="center"/>
         </LinearLayout>
