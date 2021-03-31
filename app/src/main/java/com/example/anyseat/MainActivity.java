@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         TextView register = (TextView)findViewById(R.id.register);
         TextView finduser = (TextView) findViewById(R.id.FindUser);
-        Button loginbutton = (Button)findViewById(R.id.loginButton);
+        ImageView loginbutton = (ImageView) findViewById(R.id.loginButton);
         useremail = (TextView) findViewById(R.id.user_email_text);
         userpassword = (TextView) findViewById(R.id.user_password_text);
 
