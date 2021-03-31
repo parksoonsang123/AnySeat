@@ -5,9 +5,9 @@
 
     <ImageView
         android:id="@+id/writeboard_item_imageview2"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/ic_baseline_add_24"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/imageadd"
         android:layout_gravity="center"
         android:scaleType="fitXY"/>
 

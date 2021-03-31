@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,8 +23,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -37,6 +41,8 @@ public class WriteBoardActivity extends AppCompatActivity {
 
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
+    private DatabaseReference databaseReference2;
+    private DatabaseReference databaseReference3;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseStorage storage;
 
@@ -44,6 +50,7 @@ public class WriteBoardActivity extends AppCompatActivity {
     EditText writecontents;
     Button completebtn;
     Button imagebtn;
+    ImageView write_back;
 
     long time;
     long imagename;
@@ -64,13 +71,30 @@ public class WriteBoardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_write_board);
 
+        Intent intent = getIntent();
+        final String postid = intent.getStringExtra("postid");
+        final String goodcnt = intent.getStringExtra("goodcnt");
+        final String commentcnt = intent.getStringExtra("commentcnt");
+
         writetitle = findViewById(R.id.write_title);
         writecontents = findViewById(R.id.write_contents);
         completebtn = findViewById(R.id.write_complete_btn);
 
+        write_back = findViewById(R.id.write_back);
+        write_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         completebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(postid != null){
+                    imagedelete(postid);
+                }
+
                 list2.clear();
                 cnt = 0;
                 //이미지 업로드
@@ -125,7 +149,7 @@ public class WriteBoardActivity extends AppCompatActivity {
 
                                     if(cnt == list.size() - 1){ //이미지파일 업로드 완료 후 동작
                                         progressDialog.dismiss();
-                                        postimage();
+                                        postimage(postid, goodcnt, commentcnt);
                                     }
                                 }
                                 else{
@@ -138,66 +162,129 @@ public class WriteBoardActivity extends AppCompatActivity {
                 else{   //이미지 파일 없을 때
                     String userid = mAuth.getCurrentUser().getUid();
                     database = FirebaseDatabase.getInstance();
-                    databaseReference = database.getReference("Post").push();
-                    String postid = databaseReference.getKey();
+                    if(postid == null){
+                        databaseReference = database.getReference("Post").push();
+                        String postid2 = databaseReference.getKey();
 
-                    time = System.currentTimeMillis();
+                        time = System.currentTimeMillis();
 
-                    HashMap result = new HashMap<>();
+                        HashMap result = new HashMap<>();
 
-                    result.put("title", writetitle.getText().toString());
-                    result.put("contents", writecontents.getText().toString());
-                    result.put("writetime", makeTimeStamp(time));
-                    result.put("goodcnt", "0");
-                    result.put("commentcnt", "0");
-                    result.put("postid", postid);
-                    result.put("userid", userid);
-                    result.put("imageexist", "0");
-                    result.put("imageurilist", list2);
-                    result.put("imagenamelist", list3);
+                        result.put("title", writetitle.getText().toString());
+                        result.put("contents", writecontents.getText().toString());
+                        result.put("writetime", makeTimeStamp(time));
+                        result.put("goodcnt", "0");
+                        result.put("commentcnt", "0");
+                        result.put("postid", postid2);
+                        result.put("userid", userid);
+                        result.put("imageexist", "0");
+                        result.put("imageurilist", list2);
+                        result.put("imagenamelist", list3);
 
-                    databaseReference.setValue(result);
-                    finish();
+                        databaseReference.setValue(result);
+                        finish();
+                    }
+                    else{
+                        databaseReference = database.getReference("Post").child(postid);
+
+                        time = System.currentTimeMillis();
+
+                        HashMap result = new HashMap<>();
+
+                        result.put("title", writetitle.getText().toString());
+                        result.put("contents", writecontents.getText().toString());
+                        result.put("writetime", makeTimeStamp(time));
+                        result.put("goodcnt", goodcnt);
+                        result.put("commentcnt", commentcnt);
+                        result.put("postid", postid);
+                        result.put("userid", userid);
+                        result.put("imageexist", "0");
+                        result.put("imageurilist", list2);
+                        result.put("imagenamelist", list3);
+
+                        databaseReference.setValue(result);
+                        finish();
+                    }
+
+
+
                 }
             }
         });
 
-        imagebtn = findViewById(R.id.write_image_btn);
-        imagebtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요"), 0);
-            }
-        });
+
+
 
         recyclerView = findViewById(R.id.write_recyclerview);
         LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(manager);
-        adapter = new WriteBoardAdapter(list, this);
-        adapter.setOnPlusClickListener(new WriteBoardAdapter.OnPlusClickListener() {
-            @Override
-            public void onPlusClick(View v, int position) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요"), 0);
-            }
-        });
-        adapter.setOnOtherClickListener(new WriteBoardAdapter.OnOtherClickListener() {
-            @Override
-            public void onOtherClick(View v, int position) {
-                list.remove(position);
-                adapter.notifyItemRemoved(position);
-            }
-        });
 
-        recyclerView.setAdapter(adapter);
 
+        if(postid == null){
+            list.add(new WriteBoardItem(null, Code.ViewType.SECOND));
+            adapter = new WriteBoardAdapter(list, this);
+            adapter.setOnPlusClickListener(new WriteBoardAdapter.OnPlusClickListener() {
+                @Override
+                public void onPlusClick(View v, int position) {
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                    startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요"), 0);
+                }
+            });
+            adapter.setOnOtherClickListener(new WriteBoardAdapter.OnOtherClickListener() {
+                @Override
+                public void onOtherClick(View v, int position) {
+                    list.remove(position);
+                    adapter.notifyItemRemoved(position);
+                }
+            });
+
+            recyclerView.setAdapter(adapter);
+        }
+        else{
+            databaseReference2 = FirebaseDatabase.getInstance().getReference("Post").child(postid);
+            databaseReference2.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    PostItem item = snapshot.getValue(PostItem.class);
+
+                    writetitle.setText(item.getTitle());
+                    writecontents.setText(item.getContents());
+
+                    for(int i=0;i<item.getImageurilist().size();i++){
+                        Uri uri = Uri.parse(item.getImageurilist().get(i));
+                        list.add(new WriteBoardItem(uri, Code.ViewType.FIRST));
+                    }
+                    list.add(new WriteBoardItem(null, Code.ViewType.SECOND));
+                    adapter = new WriteBoardAdapter(list, getApplicationContext());
+                    adapter.setOnPlusClickListener(new WriteBoardAdapter.OnPlusClickListener() {
+                        @Override
+                        public void onPlusClick(View v, int position) {
+                            Intent intent = new Intent();
+                            intent.setType("image/*");
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                            startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요"), 0);
+                        }
+                    });
+                    adapter.setOnOtherClickListener(new WriteBoardAdapter.OnOtherClickListener() {
+                        @Override
+                        public void onOtherClick(View v, int position) {
+                            list.remove(position);
+                            adapter.notifyItemRemoved(position);
+                        }
+                    });
+
+                    recyclerView.setAdapter(adapter);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
     }
 
     @Override
@@ -272,10 +359,53 @@ public class WriteBoardActivity extends AppCompatActivity {
         return format.format(in);
     }
 
-    private void postimage(){
+    private void postimage(String postid, String goodcnt, String commentcnt){
         String userid = mAuth.getCurrentUser().getUid();
         database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference("Post").push();
+        if(postid == null){
+            databaseReference = database.getReference("Post").push();
+            String postid2 = databaseReference.getKey();
+
+            time = System.currentTimeMillis();
+
+            HashMap result = new HashMap<>();
+
+            result.put("title", writetitle.getText().toString());
+            result.put("contents", writecontents.getText().toString());
+            result.put("writetime", makeTimeStamp(time));
+            result.put("goodcnt", "0");
+            result.put("commentcnt", "0");
+            result.put("postid", postid2);
+            result.put("userid", userid);
+            result.put("imageexist", "1");
+            result.put("imageurilist", list2);
+            result.put("imagenamelist", list3);
+
+            databaseReference.setValue(result);
+            finish();
+        }
+        else{
+            databaseReference = database.getReference("Post").child(postid);
+
+            time = System.currentTimeMillis();
+
+            HashMap result = new HashMap<>();
+
+            result.put("title", writetitle.getText().toString());
+            result.put("contents", writecontents.getText().toString());
+            result.put("writetime", makeTimeStamp(time));
+            result.put("goodcnt", goodcnt);
+            result.put("commentcnt", commentcnt);
+            result.put("postid", postid);
+            result.put("userid", userid);
+            result.put("imageexist", "1");
+            result.put("imageurilist", list2);
+            result.put("imagenamelist", list3);
+
+            databaseReference.setValue(result);
+            finish();
+        }
+        /*databaseReference = database.getReference("Post").push();
         String postid = databaseReference.getKey();
 
         time = System.currentTimeMillis();
@@ -294,6 +424,28 @@ public class WriteBoardActivity extends AppCompatActivity {
         result.put("imagenamelist", list3);
 
         databaseReference.setValue(result);
-        finish();
+        finish();*/
+    }
+
+    private void imagedelete(final String postid){
+        databaseReference3 = FirebaseDatabase.getInstance().getReference("Post").child(postid);
+        databaseReference3.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                PostItem item = snapshot.getValue(PostItem.class);
+                if(item.getImageexist().equals("1")){//이미지가 있을 때
+                    for(int i=0;i<item.getImagenamelist().size();i++){
+                        storage = FirebaseStorage.getInstance();
+                        StorageReference storageRef = storage.getReferenceFromUrl("gs://anyseat-4e964.appspot.com/").child("images/"+item.getImagenamelist().get(i));
+                        storageRef.delete();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }

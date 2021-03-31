@@ -62,6 +62,7 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
     DatabaseReference reference5;
     DatabaseReference reference6;
     DatabaseReference reference7;
+    DatabaseReference reference8;
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     String userId;
@@ -105,9 +106,24 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
         fbdremakebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent1 = new Intent(FreeBoardDetailActivity.this, WriteBoardActivity.class);
-                intent1.putExtra("postid", postid);
-                startActivity(intent1);
+
+                reference8 = FirebaseDatabase.getInstance().getReference("Post").child(postid);
+                reference8.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        PostItem item = snapshot.getValue(PostItem.class);
+                        Intent intent1 = new Intent(FreeBoardDetailActivity.this, WriteBoardActivity.class);
+                        intent1.putExtra("postid", postid);
+                        intent1.putExtra("goodcnt", item.getGoodcnt());
+                        intent1.putExtra("commentcnt", item.getCommentcnt());
+                        startActivity(intent1);
+                        finish();
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
 
