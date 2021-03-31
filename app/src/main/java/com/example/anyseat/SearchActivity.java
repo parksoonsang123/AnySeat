@@ -97,8 +97,8 @@ public class SearchActivity extends AppCompatActivity {
 
                                 if(list.size() == 0){
                                     imageView.setImageResource(R.drawable.notfind);
-                                    //adapter = new FreeBoardAdapter(list, userId);
-                                    //recyclerView.setAdapter(adapter);
+                                    adapter = new FreeBoardAdapter(list, userId);
+                                    recyclerView.setAdapter(adapter);
                                     //imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
                                 }
                                 else{

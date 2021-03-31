@@ -163,7 +163,7 @@ public class FreeBoardDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             goodcnt = itemView.findViewById(R.id.freeboarddetail_goodcnt);
             commentcnt = itemView.findViewById(R.id.freeboarddetail_commentcnt);
             imagecnt = itemView.findViewById(R.id.freeboarddetail_imagecnt);
-            goodbtn = itemView.findViewById(R.id.freeboarddetail_goodbtn);
+            goodbtn = itemView.findViewById(R.id.detail_good);
             goodbtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

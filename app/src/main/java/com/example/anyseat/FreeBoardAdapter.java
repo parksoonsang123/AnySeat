@@ -108,6 +108,7 @@ public class FreeBoardAdapter extends RecyclerView.Adapter<FreeBoardAdapter.View
                     int pos = getAdapterPosition();
                    Intent intent = new Intent(v.getContext(), FreeBoardDetailActivity.class);
                    intent.putExtra("id", mDataList.get(pos).getPostid());
+                   intent.putExtra("pos", pos);
                    v.getContext().startActivity(intent);
                 }
             });

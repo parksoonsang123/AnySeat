@@ -91,7 +91,7 @@ public class FreeBoardActivity extends AppCompatActivity {
         });
     }
 
-    private void postdelete(int position){
+   /* private void postdelete(int position){
         String postid = list.get(position).getPostid();
         reference2 = FirebaseDatabase.getInstance().getReference("Post").child(postid);
         reference2.removeValue();
@@ -164,5 +164,5 @@ public class FreeBoardActivity extends AppCompatActivity {
         else{
             postdelete(position);
         }
-    }
+    }*/
 }

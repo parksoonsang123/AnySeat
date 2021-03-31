@@ -1,5 +1,6 @@
 package com.example.anyseat;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,6 +28,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,7 +38,10 @@ import java.util.HashMap;
 public class FreeBoardDetailActivity extends AppCompatActivity {
 
     TextView fbdtime;
-    Button fbdgoodbtn;
+    //Button fbdgoodbtn;
+    Button fbdremakebtn;
+    Button fbddelbtn;
+    ImageView fbdbackbtn;
     TextView fbdtitle;
     TextView fbdcontents;
     TextView fbdgoodcnt;
@@ -52,6 +59,9 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
     DatabaseReference reference2;
     DatabaseReference reference3;
     DatabaseReference reference4;
+    DatabaseReference reference5;
+    DatabaseReference reference6;
+    DatabaseReference reference7;
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     String userId;
@@ -62,17 +72,71 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
     Button pb;
     Button nb;
 
+    FirebaseStorage storage;
+
+    private ArrayList<String> userlist = new ArrayList<>();
+
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_free_board_detail);
+
+        Intent intent = getIntent();
+        final String postid = intent.getStringExtra("id");
 
 
 
         userId = mAuth.getCurrentUser().getUid();
 
         fbdtime = findViewById(R.id.freeboarddetail_time);
-        fbdgoodbtn = findViewById(R.id.freeboarddetail_goodbtn);
+
+        //fbdgoodbtn = findViewById(R.id.detail_good);
+
+        fbdbackbtn = findViewById(R.id.detail_back);
+        fbdbackbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        fbdremakebtn = findViewById(R.id.detail_remake);
+        fbdremakebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(FreeBoardDetailActivity.this, WriteBoardActivity.class);
+                intent1.putExtra("postid", postid);
+                startActivity(intent1);
+            }
+        });
+
+        fbddelbtn = findViewById(R.id.detail_del);
+        fbddelbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext(), R.style.MyDialogTheme);
+                builder.setMessage("삭제하시겠습니까?");
+
+                builder.setPositiveButton("확인",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                commentsdelete(postid);
+                                finish();
+                            }
+                        });
+                builder.setNegativeButton("취소",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                builder.show();
+            }
+        });
+
 
         fbdtitle = findViewById(R.id.freeboarddetail_title);
         fbdcontents = findViewById(R.id.freeboarddetail_contents);
@@ -120,8 +184,25 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(manager);
 
 
-        Intent intent = getIntent();
-        final String postid = intent.getStringExtra("id");
+        reference5 = FirebaseDatabase.getInstance().getReference("Post").child(postid);
+        reference5.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                PostItem item = snapshot.getValue(PostItem.class);
+                if(item.getUserid().equals(userId)){
+                    fbddelbtn.setVisibility(View.VISIBLE);
+                    fbdremakebtn.setVisibility(View.VISIBLE);
+                }
+                else{
+                    fbddelbtn.setVisibility(View.INVISIBLE);
+                    fbdremakebtn.setVisibility(View.INVISIBLE);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         reference = FirebaseDatabase.getInstance().getReference("Post").child(postid);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -492,6 +573,107 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+
+    private void postdelete(String postid){
+        //String postid = list.get(position).getPostid();
+        reference2 = FirebaseDatabase.getInstance().getReference("Post").child(postid);
+        reference2.removeValue();
+    }
+
+    private void commentsdelete(final String postid){
+        //final String postid = list.get(position).getPostid();
+        reference3 = FirebaseDatabase.getInstance().getReference("Reply");
+        reference3.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                    ReplyItem item1 = snapshot1.getValue(ReplyItem.class);
+                    if(item1.getPostid().equals(postid)){
+                        reference4 = FirebaseDatabase.getInstance().getReference("Reply").child(item1.getReplyid());
+                        reference4.removeValue();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        imagedelete(postid);
+    }
+
+    private void imagedelete(final String postid){
+        reference3 = FirebaseDatabase.getInstance().getReference("Post").child(postid);
+        reference3.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                PostItem item = snapshot.getValue(PostItem.class);
+                if(item.getImageexist().equals("1")){//이미지가 있을 때
+                    for(int i=0;i<item.getImagenamelist().size();i++){
+                        storage = FirebaseStorage.getInstance();
+                        StorageReference storageRef = storage.getReferenceFromUrl("gs://anyseat-4e964.appspot.com/").child("images/"+item.getImagenamelist().get(i));
+                        storageRef.delete();
+                    }
+                    gooddelete(postid);
+                }
+                else{
+                    gooddelete(postid);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void gooddelete(final String postid){
+        reference3 = FirebaseDatabase.getInstance().getReference("Post").child(postid);
+        reference3.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                final PostItem item = snapshot.getValue(PostItem.class);
+                if(!item.getGoodcnt().equals("0")){
+                    reference6 = FirebaseDatabase.getInstance().getReference("UserList");
+                    reference6.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                                userlist.add(snapshot1.getValue().toString());
+                            }
+
+                            for(int i=0; i<userlist.size(); i++){
+                                reference7 = FirebaseDatabase.getInstance().getReference("Good").child(userlist.get(i)).child(item.getPostid());
+                                if(reference7 != null){
+                                    reference7.removeValue();
+                                }
+                            }
+
+                            postdelete(postid);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+                else{
+                    postdelete(postid);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
     }
 
