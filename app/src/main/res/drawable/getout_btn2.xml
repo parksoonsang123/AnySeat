@@ -2,14 +2,14 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:drawable="@drawable/home_btn4"
+        android:drawable="@drawable/home_btn5"
         android:width="50dp"
         android:height="50dp"/>
 
     <item
-        android:drawable="@drawable/logout2"
-        android:width="20dp"
-        android:height="25dp"
+        android:drawable="@drawable/exit2"
+        android:width="27dp"
+        android:height="27dp"
         android:gravity="center"/>
 
 </layer-list>

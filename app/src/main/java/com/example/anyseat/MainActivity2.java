@@ -62,7 +62,16 @@ public class MainActivity2 extends AppCompatActivity {
                         getSupportFragmentManager().beginTransaction().
                                 replace(R.id.main_frame_layout, homeFragment)
                                 .commitAllowingStateLoss();
-                        main_btn.setVisibility(View.INVISIBLE);
+
+                        main_btn.setVisibility(View.VISIBLE);
+                        main_btn.setBackgroundResource(R.drawable.ic_baseline_person_24);
+                        main_btn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(MainActivity2.this, MyPageActivity.class);
+                                startActivity(intent);
+                            }
+                        });
                         return true;
 
                     case R.id.tab1:

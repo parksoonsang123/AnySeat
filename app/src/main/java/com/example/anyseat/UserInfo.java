@@ -6,6 +6,7 @@ public class UserInfo {
     public String Password;
     public int Grade=1;
     public String using = "false";
+    public String uid;
 
     public UserInfo(){
 
@@ -17,6 +18,14 @@ public class UserInfo {
         this.Password = password;
         this.Grade = grade;
         if(Grade == 0) Grade = 1;
+    }
+
+    public UserInfo(String name, String email, String password, int grade, String uid) {
+        Name = name;
+        Email = email;
+        Password = password;
+        Grade = grade;
+        this.uid = uid;
     }
 
     @Override

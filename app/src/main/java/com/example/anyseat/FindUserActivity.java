@@ -36,7 +36,7 @@ public class FindUserActivity extends AppCompatActivity {
                 Users.clear();
                 for(DataSnapshot snapshot1 : snapshot.getChildren()){
                     UserInfo userInfo = snapshot1.getValue(UserInfo.class);
-                    Users.add(new UserInfo(userInfo.Name,userInfo.Email,userInfo.Password,userInfo.Grade));
+                    Users.add(new UserInfo(userInfo.Name,userInfo.Email,userInfo.Password,userInfo.Grade, userInfo.uid));
                 }
             }
 

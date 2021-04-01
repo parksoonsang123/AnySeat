@@ -35,6 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
     Context context = RegisterActivity.this;
 
     String name, id, password, email;
+    String uid;
     int grade;
 
     @Override
@@ -107,7 +108,8 @@ public class RegisterActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            writeNewUser(Name, Email, Password, Grade);
+                            uid = mAuth.getCurrentUser().getUid();
+                            writeNewUser(Name, Email, Password, Grade, uid);
                             //ui
                         } else {
                             // If sign in fails, display a message to the user.
@@ -121,8 +123,8 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
-    private void writeNewUser(String Name, String Email, String Password, int Grade) {
-        UserInfo userInfo = new UserInfo(Name, Email, Password, Grade);
+    private void writeNewUser(String Name, String Email, String Password, int Grade, String uid) {
+        UserInfo userInfo = new UserInfo(Name, Email, Password, Grade, uid);
 
         mDatabase.child("UserInfo").child(Password).setValue(userInfo)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
