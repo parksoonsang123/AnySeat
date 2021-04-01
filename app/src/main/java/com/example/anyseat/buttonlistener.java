@@ -53,12 +53,130 @@ public class buttonlistener implements View.OnClickListener {
     public void onClick(View view) {
 
         final ImageView imageView = (ImageView) view;
+        String seat = "";
+        switch (imageView.getId()){
+            case R.id.L11:
+                seat = "L1-1";
+                break;
+            case R.id.L12:
+                seat = "L1-2";
+                break;
+            case R.id.L13:
+                seat = "L1-3";
+                break;
+            case R.id.L14:
+                seat = "L1-4";
+                break;
+
+            case R.id.L21:
+                seat = "L2-1";
+                break;
+            case R.id.L22:
+                seat = "L2-2";
+                break;
+            case R.id.L23:
+                seat = "L2-3";
+                break;
+            case R.id.L24:
+                seat = "L2-4";
+                break;
+
+            case R.id.L31:
+                seat = "L3-1";
+                break;
+            case R.id.L32:
+                seat = "L3-2";
+                break;
+            case R.id.L33:
+                seat = "L3-3";
+                break;
+            case R.id.L34:
+                seat = "L3-4";
+                break;
+
+            case R.id.L41:
+                seat = "L4-1";
+                break;
+            case R.id.L42:
+                seat = "L4-2";
+                break;
+            case R.id.L43:
+                seat = "L4-3";
+                break;
+            case R.id.L44:
+                seat = "L4-4";
+                break;
+
+            case R.id.L51:
+                seat = "L5-1";
+                break;
+            case R.id.L52:
+                seat = "L5-2";
+                break;
+            case R.id.L53:
+                seat = "L5-3";
+                break;
+            case R.id.L54:
+                seat = "L5-4";
+                break;
+
+            case R.id.L61:
+                seat = "L6-1";
+                break;
+            case R.id.L62:
+                seat = "L6-2";
+                break;
+            case R.id.L63:
+                seat = "L6-3";
+                break;
+            case R.id.L64:
+                seat = "L6-4";
+                break;
+
+            case R.id.L71:
+                seat = "L7-1";
+                break;
+            case R.id.L72:
+                seat = "L7-2";
+                break;
+            case R.id.L73:
+                seat = "L7-3";
+                break;
+            case R.id.L74:
+                seat = "L7-4";
+                break;
+
+            case R.id.L81:
+                seat = "L8-1";
+                break;
+            case R.id.L82:
+                seat = "L8-2";
+                break;
+
+            case R.id.R11:seat = "R1-1";break;
+            case R.id.R12:seat = "R1-2";break;
+            case R.id.R21:seat = "R2-1";break;
+            case R.id.R22:seat = "R2-2";break;
+            case R.id.R31:seat = "R3-1";break;
+            case R.id.R32:seat = "R3-2";break;
+            case R.id.R41:seat = "R4-1";break;
+            case R.id.R42:seat = "R4-2";break;
+            case R.id.R51:seat = "R5-1";break;
+            case R.id.R52:seat = "R5-2";break;
+            case R.id.R61:seat = "R6-1";break;
+            case R.id.R62:seat = "R6-2";break;
+            case R.id.R71:seat = "R7-1";break;
+            case R.id.R72:seat = "R7-2";break;
+            case R.id.R81:seat = "R8-1";break;
+            case R.id.R82:seat = "R8-2";break;
+        }
         final String username = imageView.getTag().toString();
-        final int seatnum = imageView.getId();
+        int seatnum = imageView.getId();
         final String[] using = new String[1];
+        final DatabaseReference finalUserdata = FirebaseDatabase.getInstance().getReference().child("UserInfo").child(user.Password);
         if(user.using.equals("false")) {
             if (username.equals("빈 자리")) {
-                writeNewUser(view, seatnum, user.Name);
+                writeNewUser(seat, view, seatnum, user.Name);
                 Toast.makeText(context, "선택하신 자리 이용을 시작합니다.", Toast.LENGTH_SHORT).show();
                 finalUserdata.child("using").setValue("true");
             } else {
@@ -66,23 +184,13 @@ public class buttonlistener implements View.OnClickListener {
             }
         }
         else{
-            final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("SeatInfo");
+            final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("SeatInfo").child(seat);
             databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull final DataSnapshot snapshot) {
-                    seatlist.clear();
-                    SeatInfo seatInfo = null;
-                    int c = -1;
-                    for(DataSnapshot snapshot1 : snapshot.getChildren()){
-                        c++;
-                        SeatInfo temp = snapshot1.getValue(SeatInfo.class);
-                        if(temp.num == seatnum){
-                            seatInfo = temp;
-                            break;
-                        }
-                    }
-                    final String s = Integer.toString(c);
+                    SeatInfo seatInfo = snapshot.getValue(SeatInfo.class);
                     if(seatInfo.user.equals(user.Name)){
+                        Toast.makeText(context, "내가 사용중", Toast.LENGTH_SHORT).show();
                         AlertDialog.Builder exitbuilder = new AlertDialog.Builder(context);
                         exitbuilder.setTitle("본인이 사용중인 자리입니다!");
                         exitbuilder.setMessage("사용을 종료하시겠습니까?");
@@ -95,11 +203,9 @@ public class buttonlistener implements View.OnClickListener {
                         exitbuilder.setPositiveButton("예", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                databaseReference.child(s).child("status").setValue("off");
-                                databaseReference.child(s).child("statusnum").setValue(0);
-                                databaseReference.child(s).child("user").setValue("빈 자리");
-                                imageView.setTag("빈 자리");
-                                imageView.setImageResource(R.drawable.empty_seat);
+                                databaseReference.child("status").setValue("off");
+                                databaseReference.child("statusnum").setValue(0);
+                                databaseReference.child("user").setValue("빈 자리");
                                 Toast.makeText(context, "자리 사용을 종료합니다.", Toast.LENGTH_SHORT).show();
                                 finalUserdata.child("using").setValue("false");
                             }
@@ -120,48 +226,21 @@ public class buttonlistener implements View.OnClickListener {
         }
     }
 
-    private void writeNewUser(View view, final int seatnum, String username) {
-        String s = "new user";
+    private void writeNewUser(String s, View view, int seatnum, String username) {
+        String string = s;
         SeatInfo seatinfo = new SeatInfo(seatnum, 1, username);
-        ImageView imageView = view.findViewById(view.getId());
-        imageView.setTag("사용 중");
-        imageView.setImageResource(R.drawable.using_seat);
-        final int[] c = new int[1];
-        String string = Integer.toString( c[0]);
 
-        mDatabase.child("SeatInfo").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int count = -1;
-                seatlist.clear();
-                for(DataSnapshot snapshot1 : snapshot.getChildren()){
-                    count = count + 1;
-                    SeatInfo temp = snapshot1.getValue(SeatInfo.class);
-                    if(temp.num == seatnum){
-                        break;
-                    }
-                }
-                c[0] = count;
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-        mDatabase.child("SeatInfo").child(string).setValue(seatinfo).addOnSuccessListener(new OnSuccessListener<Void>() {
+        mDatabase.child("SeatInfo").child(s).setValue(seatinfo)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         // Write was successful!
-
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         // Write failed
-
                     }
                 });
 
