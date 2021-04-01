@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -38,6 +39,8 @@ public class MyPageActivity extends AppCompatActivity {
     TextView textView3;
 
     ImageView back;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +110,28 @@ public class MyPageActivity extends AppCompatActivity {
 
             }
         });
+
+
+
+
+
+
+
+
+
+
+
+        // 로그아웃
+        Button LogOutButton = findViewById(R.id.LogOutButton);
+        LogOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SaveSharedPreference.setUserName(((MainActivity)MainActivity.context), "", "", false);
+                finish();
+            }
+        });
+
+
 
     }
 }

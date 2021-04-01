@@ -203,7 +203,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <Button
-                android:id="@+id/OfficeTimeTable"
+                android:id="@+id/remakge"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
@@ -258,7 +258,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <Button
-                android:id="@+id/homepage_btn"
+                android:id="@+id/out"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center"

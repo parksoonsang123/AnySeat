@@ -292,7 +292,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        // 로그아웃
+        /*// 로그아웃
         Button LogOutButton = (Button)view.findViewById(R.id.LogOutButton);
         LogOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -300,7 +300,7 @@ public class HomeFragment extends Fragment {
                 SaveSharedPreference.setUserName(((MainActivity)MainActivity.context), "", "", false);
                 getActivity().finish();
             }
-        });
+        });*/
 
 
         return view;
