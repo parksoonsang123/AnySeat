@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -85,6 +86,14 @@ public class RegisterActivity extends AppCompatActivity {
 
         Button signButton = (Button)findViewById(R.id.signButton);
         signButton.setOnClickListener(new signListener());
+
+        ImageView backbutton = (ImageView)findViewById(R.id.backbutton1);
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void signUp(final String Name, final String Email, final String Password, final int Grade){

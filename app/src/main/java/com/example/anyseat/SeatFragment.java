@@ -165,6 +165,17 @@ public class SeatFragment extends Fragment {
                     SeatInfo seatInfo = snapshot1.getValue(SeatInfo.class);
                     seatlist.add(seatInfo);
                 }
+
+                for(int i=0;i<seatlist.size();i++){
+                    SeatInfo temp = seatlist.get(i);
+                    ImageView seat;
+                    seat = (ImageView)view.findViewById(temp.num);
+                    if(temp.statusnum == 0) seat.setImageResource(R.drawable.empty_seat);
+                    else {
+                        seat.setImageResource(R.drawable.using_seat);
+                        seat.setTag(temp.user);
+                    }
+                }
             }
 
             @Override
@@ -174,16 +185,7 @@ public class SeatFragment extends Fragment {
         });
 
 
-        for(int i=0;i<seatlist.size();i++){
-            SeatInfo temp = seatlist.get(i);
-            ImageView seat;
-            seat = (ImageView)view.findViewById(temp.num);
-            if(temp.statusnum == 0) seat.setImageResource(R.drawable.empty_seat);
-            else {
-                seat.setImageResource(R.drawable.using_seat);
-                seat.setTag(temp.user);
-            }
-        }
+
 
         databaseReference.child("UserInfo").addValueEventListener(new ValueEventListener() {
             @Override
