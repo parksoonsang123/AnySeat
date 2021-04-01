@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -21,6 +22,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.anyseat.Notifications.APIService;
+import com.example.anyseat.Notifications.Client;
+import com.example.anyseat.Notifications.MyResponse;
+import com.example.anyseat.Notifications.NotificationData;
+import com.example.anyseat.Notifications.SendData;
+import com.example.anyseat.Notifications.Token;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -34,6 +41,10 @@ import com.google.firebase.storage.StorageReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FreeBoardDetailActivity extends AppCompatActivity {
 
@@ -63,6 +74,8 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
     DatabaseReference reference6;
     DatabaseReference reference7;
     DatabaseReference reference8;
+    DatabaseReference reference9;
+    DatabaseReference reference10;
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     String userId;
@@ -77,7 +90,9 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
 
     private ArrayList<String> userlist = new ArrayList<>();
 
-    @SuppressLint("WrongViewCast")
+    APIService apiService;
+
+    //@SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,7 +175,9 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
         fbdcommentcnt = findViewById(R.id.freeboarddetail_commentcnt);
 
         fbdedit = findViewById(R.id.freeboard_edit);
+
         fbdsendbtn = findViewById(R.id.freeboard_sendbtn);
+
         fbdsendbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -192,6 +209,20 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                 fbdedit.setText("");
                 InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(fbdedit.getWindowToken(),0);
+
+                reference9 = FirebaseDatabase.getInstance().getReference("Post").child(postid);
+                reference9.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        PostItem item = snapshot.getValue(PostItem.class);
+                        sendNotification(item.getUserid(), "pss", 1, "댓글이 작성되었습니다.", "key");
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
 
@@ -256,7 +287,7 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                                 adapter = new FreeBoardDetailAdapter(list, userId, FreeBoardDetailActivity.this);
                                 adapter.setOnGoodClickListner(new FreeBoardDetailAdapter.OnGoodClickListener() {
                                     @Override
-                                    public void onGoodClick(View v, int position, Button btn) {
+                                    public void onGoodClick(View v, int position, ImageView btn) {
                                         Intent intent = getIntent();
                                         String postId = intent.getStringExtra("id");
                                         goodplus(postId, userId, btn);
@@ -366,7 +397,7 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                                         adapter = new FreeBoardDetailAdapter(list, userId, FreeBoardDetailActivity.this);
                                         adapter.setOnGoodClickListner(new FreeBoardDetailAdapter.OnGoodClickListener() {
                                             @Override
-                                            public void onGoodClick(View v, int position, Button btn) {
+                                            public void onGoodClick(View v, int position, ImageView btn) {
                                                 Intent intent = getIntent();
                                                 String postId = intent.getStringExtra("id");
                                                 goodplus(postId, userId, btn);
@@ -486,7 +517,7 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
         });
     }
 
-    public void goodplus(final String postId, final String userId, Button btn){
+    public void goodplus(final String postId, final String userId, ImageView btn){
 
         reference2 = FirebaseDatabase.getInstance().getReference("Good").child(userId).child(postId);
         reference2.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -513,7 +544,7 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
 
                                 reference.setValue(result);
                                 list.get(0).setPress("0");
-                                recyclerView.setAdapter(adapter);
+                                //recyclerView.setAdapter(adapter);
                             }
 
                             @Override
@@ -541,7 +572,7 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                                 reference.setValue(result);
                                 list.get(0).setPress("1");
 
-                                recyclerView.setAdapter(adapter);
+                                //recyclerView.setAdapter(adapter);
                             }
 
                             @Override
@@ -570,7 +601,7 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                             reference.setValue(result);
                             list.get(0).setPress("1");
 
-                            recyclerView.setAdapter(adapter);
+                            //recyclerView.setAdapter(adapter);
                         }
 
                         @Override
@@ -696,5 +727,45 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
     private String makeTimeStamp(long in){
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
         return format.format(in);
+    }
+
+
+    private void sendNotification(final String receiverId, final String senderName, final int type, final String content, final String key) {
+        apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("UserList").child(receiverId);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                Token token = snapshot.getValue(Token.class);
+                SendData sendData = new SendData(senderName, content, type + "", key);
+                NotificationData notificationData = new NotificationData(sendData, token.getToken());
+                Log.e("Token", token.getToken());
+                apiService.sendNotification(notificationData)
+                        .enqueue(new Callback<MyResponse>() {
+                            @Override
+                            public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                Log.e("code", response.message());
+                                if (response.code() == 200) {
+                                    if (response.body().success == 1) {
+                                        Log.e("Notification", "success");
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<MyResponse> call, Throwable t) {
+                                Log.e("onFailure", t.getMessage());
+                            }
+                        });
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }

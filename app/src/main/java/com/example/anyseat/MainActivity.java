@@ -26,10 +26,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String CHANNEL_ID = "one";
 
     private FirebaseAuth mAuth;
     private TextView useremail;
@@ -128,6 +134,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void signIn(final String email, final String password){
+
+
+
+
         //firebase 로그인
 
         mAuth.signInWithEmailAndPassword(email, password)
@@ -143,12 +153,32 @@ public class MainActivity extends AppCompatActivity {
                             if(KeepLoginCheck.isChecked()){
                                 SaveSharedPreference.setUserName(MainActivity.this, email, password, true);
                             }
-                            String uid = mAuth.getCurrentUser().getUid();
-                            reference = FirebaseDatabase.getInstance().getReference("UserList").child(uid);
-                            reference.setValue(uid);
-                            Intent intent = new Intent(MainActivity.this, MainActivity2.class);
-                            intent.putExtra("Password", password);
-                            startActivity(intent);
+
+                            FirebaseMessaging.getInstance().getToken()
+                                    .addOnCompleteListener(new OnCompleteListener<String>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<String> task) {
+                                            if(!task.isSuccessful()){
+                                                Toast.makeText(MainActivity.this, "토큰 생성 실패", Toast.LENGTH_SHORT).show();
+                                                return;
+                                            }
+
+                                            String token = task.getResult();
+                                            String uid = mAuth.getCurrentUser().getUid();
+                                            HashMap result = new HashMap<>();
+                                            result.put("UID", uid);
+                                            result.put("Token", token);
+
+                                            reference = FirebaseDatabase.getInstance().getReference("UserList").child(uid);
+                                            reference.setValue(result);
+
+                                            Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+                                            intent.putExtra("Password", password);
+                                            startActivity(intent);
+
+                                        }
+                                    });
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Toast.makeText(MainActivity.this, "로그인 실패",

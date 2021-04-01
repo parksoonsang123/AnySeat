@@ -6,7 +6,10 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -42,7 +45,7 @@ public class FreeBoardDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     public interface OnGoodClickListener {
-        void onGoodClick(View v, int position, Button btn);
+        void onGoodClick(View v, int position, ImageView btn);
     }
     private OnGoodClickListener mListener = null;
     public void setOnGoodClickListner(OnGoodClickListener listner){
@@ -59,6 +62,8 @@ public class FreeBoardDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
 
+    Animation anim_test;
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -67,14 +72,18 @@ public class FreeBoardDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         Context context = parent.getContext();
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+
+
         if(viewType == Code.ViewType.FIRST){
             view = inflater.inflate(R.layout.freeboarddetail_item1, parent, false);
             //return 각각의 뷰홀더
+            anim_test = AnimationUtils.loadAnimation(view.getContext(), R.anim.anim_test);
             return new FirstViewHolder(view);
         }
         else {
             view = inflater.inflate(R.layout.freeboarddetail_item2, parent, false);
             //return 각각의 뷰홀더
+            anim_test = AnimationUtils.loadAnimation(view.getContext(), R.anim.anim_test);
             return  new SecondViewHolder(view);
         }
 
@@ -82,6 +91,9 @@ public class FreeBoardDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+
+
+
 
 
         if(holder instanceof FirstViewHolder){
@@ -94,15 +106,17 @@ public class FreeBoardDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
 
             if(mDataList.get(0).getPress() == null){
-                ((FirstViewHolder)holder).goodbtn.setTextColor(Color.WHITE);
+                ((FirstViewHolder)holder).goodbtn.setBackgroundResource(R.drawable.like);
             }
             else if(mDataList.get(0).getPress() != null){
                 if(mDataList.get(0).getPress().equals("0")){
-                    ((FirstViewHolder)holder).goodbtn.setTextColor(Color.WHITE);
+                    ((FirstViewHolder)holder).goodbtn.setBackgroundResource(R.drawable.like);
                 }
                 else if(mDataList.get(0).getPress().equals("1")){
-                    ((FirstViewHolder)holder).goodbtn.setTextColor(Color.RED);
+                    ((FirstViewHolder)holder).goodbtn.setBackgroundResource(R.drawable.heart);
+                    ((FirstViewHolder)holder).goodbtn.startAnimation(anim_test);
                 }
+
             }
 
             if(!mDataList.get(position).getImageexist().equals("1")){    // 이미지가 없을 때 이미지뷰 칸 제거
@@ -147,7 +161,7 @@ public class FreeBoardDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         TextView goodcnt;
         TextView commentcnt;
         TextView imagecnt;
-        Button goodbtn;
+        ImageView goodbtn;
         //ImageView image;
         //ViewPager viewPager;
         //FreeBoardDetailItemViewPagerAdapter viewPagerAdapter;
@@ -228,5 +242,10 @@ public class FreeBoardDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         }
     }
+
+
+
+
+
 
 }
