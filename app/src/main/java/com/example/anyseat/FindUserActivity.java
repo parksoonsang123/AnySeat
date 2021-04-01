@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -73,7 +74,7 @@ public class FindUserActivity extends AppCompatActivity {
                             finish();
                         }
                     });
-                    EmailInfo.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    EmailInfo.setNeutralButton("NO", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
@@ -115,7 +116,7 @@ public class FindUserActivity extends AppCompatActivity {
                             finish();
                         }
                     });
-                    PasswordInfo.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    PasswordInfo.setNeutralButton("NO", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
@@ -127,6 +128,14 @@ public class FindUserActivity extends AppCompatActivity {
                     Toast.makeText(FindUserActivity.this, "가입되어 있지 않은 사용자 정보입니다.",
                             Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        ImageView backbutton = (ImageView)findViewById(R.id.backbutton2);
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }

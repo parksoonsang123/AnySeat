@@ -5,76 +5,113 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#e4ebf9"
     tools:context=".RegisterActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/colorPrimary">
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/backbutton1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic__backward"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="15dp"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="회원가입"
-            android:textColor="#ffffff"
-            android:textSize="30dp"
-            android:textStyle="bold"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginTop="17.5dp"
+            android:layout_marginRight="42dp"
+            android:text="회원 가입"
+            android:textColor="#000000"
+            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            android:textSize="25sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginRight="15dp"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
 
 
-        <EditText
-            android:layout_width="280dp"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="이름"
-            android:layout_gravity="center"
-            android:padding="10dp"
-            android:textColor="#ffffff"
-            android:textColorHint="#ffffff"
-            android:id="@+id/nameText"
-            android:drawableStart="@drawable/ic_baseline_child_care_24"
-            android:drawableLeft="@drawable/ic_baseline_child_care_24"
-            android:layout_marginTop="50dp"
-            android:background="@color/colorPrimary"/>
+            android:background="@drawable/signupinputbox"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_marginTop="65dp">
 
-        <EditText
-            android:id="@+id/emailText"
-            android:layout_width="280dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="50dp"
-            android:background="@color/colorPrimary"
-            android:drawableStart="@drawable/ic_baseline_person_24"
-            android:drawableLeft="@drawable/ic_baseline_person_24"
-            android:hint="Email"
-            android:padding="10dp"
-            android:textColor="#ffffff"
-            android:textColorHint="#ffffff" />
+            <EditText
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:hint="이름"
+                android:layout_gravity="center"
+                android:textColor="#000000"
+                android:textColorHint="#808080"
+                android:id="@+id/nameText"
+                android:drawableStart="@drawable/ic_baseline_child_care_24"
+                android:drawableLeft="@drawable/ic_baseline_child_care_24"/>
 
-        <EditText
-            android:inputType="textPassword"
-            android:layout_width="280dp"
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Password"
-            android:layout_gravity="center"
-            android:padding="10dp"
-            android:textColor="#ffffff"
-            android:textColorHint="#ffffff"
-            android:id="@+id/user_password_text"
-            android:drawableStart="@drawable/ic_baseline_lock_24"
-            android:drawableLeft="@drawable/ic_baseline_lock_24"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorPrimary"/>
+            android:background="@drawable/signupinputbox"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_marginTop="20dp">
+
+            <EditText
+                android:id="@+id/emailText"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawableStart="@drawable/ic_baseline_person_24"
+                android:drawableLeft="@drawable/ic_baseline_person_24"
+                android:hint="Email"
+                android:textColor="#000000"
+                android:textColorHint="#808080" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/signupinputbox"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_marginTop="10dp">
+
+            <EditText
+                android:inputType="textPassword"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:hint="Password"
+                android:layout_gravity="center"
+                android:textColor="#000000"
+                android:textColorHint="#808080"
+                android:id="@+id/user_password_text"
+                android:drawableStart="@drawable/ic_baseline_lock_24"
+                android:drawableLeft="@drawable/ic_baseline_lock_24"/>
+
+        </LinearLayout>
+
 
         <RadioGroup
-            android:layout_width="280dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/gradeGroup"
             android:layout_gravity="center_horizontal"
@@ -82,43 +119,53 @@
             android:layout_marginTop="10dp">
 
             <RadioButton
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1학년"
                 android:id="@+id/firstGrade"
                 android:layout_weight="1"
-                android:checked="true"/>
+                android:checked="true"
+                android:textColor="#696969"
+                android:layout_marginRight="5dp"/>
             <RadioButton
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2학년"
                 android:id="@+id/secondGrade"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:textColor="#696969"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"/>
             <RadioButton
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="3학년"
                 android:id="@+id/thirdGrade"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:textColor="#696969"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"/>
             <RadioButton
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="4학년"
                 android:id="@+id/forthGrade"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:textColor="#696969"
+                android:layout_marginLeft="5dp"/>
         </RadioGroup>
 
-
         <Button
-            android:layout_width="280dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20dp"
             android:textStyle="bold"
             android:textColor="#ffffff"
             android:text="가입하기"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="50dp"
             android:layout_gravity="center"
-            android:id="@+id/signButton"/>
+            android:id="@+id/signButton"
+            android:background="@drawable/signupbutton"/>
 
     </LinearLayout>
 </LinearLayout>

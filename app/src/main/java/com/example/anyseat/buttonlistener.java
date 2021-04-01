@@ -83,7 +83,6 @@ public class buttonlistener implements View.OnClickListener {
                     }
                     final String s = Integer.toString(c);
                     if(seatInfo.user.equals(user.Name)){
-                        Toast.makeText(context, "내가 사용중", Toast.LENGTH_SHORT).show();
                         AlertDialog.Builder exitbuilder = new AlertDialog.Builder(context);
                         exitbuilder.setTitle("본인이 사용중인 자리입니다!");
                         exitbuilder.setMessage("사용을 종료하시겠습니까?");
@@ -155,14 +154,14 @@ public class buttonlistener implements View.OnClickListener {
                     @Override
                     public void onSuccess(Void aVoid) {
                         // Write was successful!
-                        Toast.makeText(context, "저장을 완료했습니다.", Toast.LENGTH_SHORT).show();
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         // Write failed
-                        Toast.makeText(context, "저장을 실패했습니다.", Toast.LENGTH_SHORT).show();
+
                     }
                 });
 
