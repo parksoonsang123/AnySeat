@@ -154,7 +154,7 @@ public class SeatFragment extends Fragment {
         R72 = (ImageView) view.findViewById(R.id.R72);
         R82 = (ImageView) view.findViewById(R.id.R82);
 
-        profile_id = (TextView)view.findViewById(R.id.profile_id);
+        //profile_id = (TextView)view.findViewById(R.id.profile_id);
 
 
         databaseReference.child("SeatInfo").addValueEventListener(new ValueEventListener() {
@@ -170,12 +170,16 @@ public class SeatFragment extends Fragment {
                     SeatInfo temp = seatlist.get(i);
                     ImageView seat;
                     seat = (ImageView)view.findViewById(temp.num);
-                    if(temp.statusnum == 0) seat.setImageResource(R.drawable.empty_seat);
+                    if(temp.statusnum == 0) {
+                        seat.setImageResource(R.drawable.seat111);
+                    }
                     else {
-                        seat.setImageResource(R.drawable.using_seat);
+                        seat.setImageResource(R.drawable.seat2222);
                         seat.setTag(temp.user);
                     }
                 }
+
+
             }
 
             @Override
@@ -183,6 +187,7 @@ public class SeatFragment extends Fragment {
 
             }
         });
+
 
 
 

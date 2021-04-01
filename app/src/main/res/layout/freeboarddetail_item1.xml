@@ -52,13 +52,13 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <Button
+            <ImageView
                 android:id="@+id/detail_good"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginRight="20dp"
-                android:background="@drawable/thumb_up"/>
+                android:background="@drawable/like"/>
 
         </LinearLayout>
 
@@ -115,8 +115,8 @@
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:layout_gravity="right"
-                android:layout_marginRight="1dp"
-                android:background="@drawable/good_btn" />
+                android:layout_marginRight="4dp"
+                android:background="@drawable/heart" />
 
             <TextView
                 android:id="@+id/freeboarddetail_goodcnt"
@@ -131,8 +131,8 @@
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:layout_gravity="right"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="1dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="4dp"
                 android:background="@drawable/comment_btn" />
 
             <TextView
@@ -148,8 +148,8 @@
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:layout_gravity="right"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="1dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="4dp"
                 android:background="@drawable/ic_baseline_image_24" />
 
             <TextView

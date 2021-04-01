@@ -13,7 +13,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -50,11 +53,56 @@ public class HomeFragment extends Fragment {
         Password = password;
     }*/
 
+    RecyclerView recyclerView1;
+    RecyclerView recyclerView2;
+
+    private ArrayList<PostItem> list = new ArrayList<>();
+
+    DatabaseReference reference;
+
+    HomeAdapter adapter;
+
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    String userId;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        recyclerView1 = view.findViewById(R.id.home_rcv1);
+        recyclerView2 = view.findViewById(R.id.home_rcv2);
+
+        userId = mAuth.getCurrentUser().getUid();
+
+        LinearLayoutManager manager = new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false);
+        recyclerView2.setLayoutManager(manager);
+
+        reference = FirebaseDatabase.getInstance().getReference("Post");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                list.clear();
+                for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                    PostItem item1 = snapshot1.getValue(PostItem.class);
+                    if(item1.getUserid().equals(userId)){
+                        list.add(new PostItem(item1.getCommentcnt(), item1.getGoodcnt(), item1.getTitle(), item1.getContents(), item1.getWritetime(), item1.getPostid(), item1.getUserid(), item1.getImageexist(), item1.getImageurilist(), item1.getImagenamelist(), Code.ViewType.FIRST));
+                    }
+                }
+
+                adapter = new HomeAdapter(list);
+                recyclerView2.setAdapter(adapter);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
 
         /*L11 = (Button)view.findViewById(R.id.L11);
         L12 = (Button)view.findViewById(R.id.L12);
@@ -252,11 +300,13 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        Button OfficeNotice_Button = (Button)view.findViewById(R.id.OfficeNotice);
-        OfficeNotice_Button.setOnClickListener(new View.OnClickListener() {
+
+        //학과 홈페이지
+        Button homepage_btn = (Button)view.findViewById(R.id.homepage_btn);
+        homepage_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(view.getContext(), NoticeActivity.class);
+                Intent intent = new Intent(view.getContext(), HomepageActivity.class);
                 startActivity(intent);
             }
         });
