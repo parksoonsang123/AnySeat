@@ -78,7 +78,7 @@
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:layout_gravity="right"
-                android:background="@drawable/good_btn"
+                android:background="@drawable/heart"
                 android:layout_marginRight="1dp"/>
 
             <TextView
