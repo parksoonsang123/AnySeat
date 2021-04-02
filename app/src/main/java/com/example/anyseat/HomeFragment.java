@@ -94,7 +94,9 @@ public class HomeFragment extends Fragment {
 
         status_img = view.findViewById(R.id.homepage_status_img);
         status_txt = view.findViewById(R.id.homepage_status_txt);
+
         finish = view.findViewById(R.id.finish_btn);
+
         add = view.findViewById(R.id.notice_add_btn);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,7 +174,8 @@ public class HomeFragment extends Fragment {
                         if(!item.using.equals("false")){
                             final String seatname = item.using;
                             final String pw = item.Password;
-                            status_img.setImageResource(R.drawable.studyimage);
+                            //status_img.setImageResource(R.drawable.studyimage);
+                            status_img.setVisibility(View.VISIBLE);
                             status_txt.setText("사용중 입니다.");
                             finish.setVisibility(View.VISIBLE);
                             finish.setOnClickListener(new View.OnClickListener() {
@@ -195,6 +198,8 @@ public class HomeFragment extends Fragment {
                                                     status_img.setImageResource(0);
                                                     status_txt.setText("사용중이 아닙니다.");
                                                     finish.setVisibility(View.INVISIBLE);
+
+
                                                 }
                                             });
                                     builder.setNegativeButton("취소",
@@ -209,7 +214,8 @@ public class HomeFragment extends Fragment {
                             });
                         }
                         else{
-                            status_img.setImageResource(0);
+                            //status_img.setImageResource(0);
+                            status_img.setVisibility(View.INVISIBLE);
                             status_txt.setText("사용중이 아닙니다.");
                             finish.setVisibility(View.INVISIBLE);
                         }
