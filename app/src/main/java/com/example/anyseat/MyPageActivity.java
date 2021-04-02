@@ -53,6 +53,8 @@ public class MyPageActivity extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*Intent intent = new Intent(MyPageActivity.this, MainActivity2.class);
+                startActivity(intent);*/
                 finish();
             }
         });
@@ -130,12 +132,21 @@ public class MyPageActivity extends AppCompatActivity {
             public void onClick(View v) {
                 SaveSharedPreference.setUserName(((MainActivity)MainActivity.context), "", "", false);
                 Intent intent = new Intent(MyPageActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-                finish();
             }
         });
 
 
 
     }
+
+
+    /*@Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(MyPageActivity.this, MainActivity2.class);
+        startActivity(intent);
+        finish();
+    }*/
 }
