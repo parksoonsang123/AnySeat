@@ -11,11 +11,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MyPageActivity"></activity>
-
+        <activity android:name=".WriteNoticeActivity"></activity>
+        <activity android:name=".NoticeDetailActivity" />
+        <activity android:name=".MyPageActivity" />
         <activity android:name=".FindUserActivity" />
         <activity android:name=".SearchActivity" />
-
         <activity android:name=".MainActivity2" />
         <activity android:name=".Organization" />
         <activity android:name=".RegisterActivity" />
@@ -32,6 +32,7 @@
         <activity android:name=".FreeBoardActivity" />
         <activity android:name=".HomepageActivity" />
         <activity android:name=".NoticeActivity" />
+
         <meta-data
             android:name="firebase_messaging_auto_init_enabled"
             android:value="false" />
@@ -48,8 +49,8 @@
             </intent-filter>
         </service>
     </application>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 </manifest>

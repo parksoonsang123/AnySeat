@@ -26,7 +26,7 @@ public class NoticeActivity extends Activity implements NoticeAdapter.ClickListe
 
     private Button homepagebtn;
     private RecyclerView recyclerView;
-    private ArrayList<Notice_Item> items;
+    private ArrayList<PostItem2> items;
 
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
@@ -63,7 +63,7 @@ public class NoticeActivity extends Activity implements NoticeAdapter.ClickListe
                     String key1 = snapshot1.getKey();
                     //선택적으로 읽는 부분 ("Notice")
                     if(!(key1.equals("Post") || key1.equals("Reply") || key1.equals("Good") || key1.equals("SeatInfo") || key1.equals("UserInfo") || key1.equals("UserList"))){
-                        items.add(new Notice_Item(snapshot1.getValue().toString()));
+                        //items.add(new Notice_Item(snapshot1.getValue().toString()));
                     }
                 }
 

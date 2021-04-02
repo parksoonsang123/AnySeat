@@ -1,5 +1,6 @@
 package com.example.anyseat;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder>{
 
-    private final List<Notice_Item> mDataList;
+    private final List<PostItem2> mDataList;
 
     //클릭 구현
     public interface ClickListener{
@@ -25,7 +26,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
         mListener = listener;
     }
 
-    public NoticeAdapter(List<Notice_Item> dataList){
+    public NoticeAdapter(List<PostItem2> dataList){
         mDataList = dataList;
     }
 
@@ -40,8 +41,9 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
     //클릭 처리
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Notice_Item item = mDataList.get(position);
+        PostItem2 item = mDataList.get(position);
         holder.contents.setText(item.getContents());
+        holder.writetime.setText(item.getWritetime());
 
         if(mListener != null){
             final int pos = position;
@@ -54,11 +56,24 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
         return mDataList.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder{
         TextView contents;
+        TextView writetime;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            contents = itemView.findViewById(R.id.contents_text);
+            contents = itemView.findViewById(R.id.notice_content);
+            writetime = itemView.findViewById(R.id.notice_writetime);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = getAdapterPosition();
+                    Intent intent = new Intent(v.getContext(), NoticeDetailActivity.class);
+                    intent.putExtra("postid", mDataList.get(pos).getPostid());
+                    intent.putExtra("pos", pos);
+                    v.getContext().startActivity(intent);
+                }
+            });
         }
     }
 }
