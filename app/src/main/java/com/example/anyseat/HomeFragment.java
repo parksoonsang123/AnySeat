@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -58,8 +59,10 @@ public class HomeFragment extends Fragment {
 
     private ArrayList<PostItem> list = new ArrayList<>();
 
-    DatabaseReference reference;
+    DatabaseReference reference3;
 
+    TextView status_txt;
+    ImageView status_img;
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     String userId;
@@ -70,6 +73,8 @@ public class HomeFragment extends Fragment {
 
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        status_img = view.findViewById(R.id.homepage_status_img);
+        status_txt = view.findViewById(R.id.homepage_status_txt);
         recyclerView2 = view.findViewById(R.id.home_rcv2);
 
         userId = mAuth.getCurrentUser().getUid();
@@ -247,7 +252,39 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
 */
+
+
+        reference3 = FirebaseDatabase.getInstance().getReference("UserInfo");
+        reference3.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                    UserInfo item = snapshot1.getValue(UserInfo.class);
+                    if(item.uid != null && item.uid.equals(userId)){
+                        if(item.using.equals("true")){
+                            status_img.setImageResource(R.drawable.studyimage);
+                            status_txt.setText("사용중 입니다.");
+                        }
+                        else{
+                            status_img.setImageResource(0);
+                            status_txt.setText("사용중이 아닙니다.");
+                        }
+
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+
 
         // 오픈채팅
         Button OpenKakaoButton = (Button)view.findViewById(R.id.OpenChatButton);

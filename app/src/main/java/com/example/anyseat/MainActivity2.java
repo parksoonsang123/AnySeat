@@ -38,6 +38,13 @@ public class MainActivity2 extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         main_tv = findViewById(R.id.main_text);
         main_btn = findViewById(R.id.main_btn);
+        main_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity2.this, MyPageActivity.class);
+                startActivity(intent);
+            }
+        });
 
         crewFragment = new CrewFragment();
         boardFragment = new BoardFragment();

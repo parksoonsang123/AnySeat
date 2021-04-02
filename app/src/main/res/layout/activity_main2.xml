@@ -35,9 +35,8 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_gravity="right"
-            android:background="@drawable/ic_baseline_search_24"
-            android:layout_marginRight="20dp"
-            android:visibility="invisible"/>
+            android:background="@drawable/ic_baseline_person_24"
+            android:layout_marginRight="20dp"/>
 
 
     </LinearLayout>

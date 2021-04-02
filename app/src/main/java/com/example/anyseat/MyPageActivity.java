@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +29,7 @@ public class MyPageActivity extends AppCompatActivity {
 
     DatabaseReference reference;
     DatabaseReference reference2;
+    DatabaseReference reference3;
 
     HomeAdapter adapter;
 
@@ -96,9 +98,9 @@ public class MyPageActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot snapshot1 : snapshot.getChildren()){
                     UserInfo item = snapshot1.getValue(UserInfo.class);
-                    if(item.uid.equals(userId)){
+                    if(item.uid != null && item.uid.equals(userId)){
                         textView1.setText(item.Name);
-                        textView2.setText(item.Grade);
+                        textView2.setText(item.Grade+"");
                         textView3.setText(item.Email);
                         break;
                     }
@@ -127,6 +129,8 @@ public class MyPageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 SaveSharedPreference.setUserName(((MainActivity)MainActivity.context), "", "", false);
+                Intent intent = new Intent(MyPageActivity.this, MainActivity.class);
+                startActivity(intent);
                 finish();
             }
         });
