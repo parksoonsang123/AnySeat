@@ -2,109 +2,196 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffff"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/Professor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="15dp"
-        android:text="지도교수\n 최두현"
-        android:textSize="10dp"/>
-
-    <Button
-        android:id="@+id/Assistant"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="15dp"
-        android:text="조교\n 오은희"
-        android:textSize="10dp"/>
-
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center"
-        android:layout_marginTop="15dp">
+        android:background="#ffffff"
+        android:padding="10dp"
+        android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/President_Student"
+        <ImageView
+            android:id="@+id/origin_back"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/ic_baseline_arrow_back_24"
+            android:layout_marginLeft="4dp"
+            android:clickable="true"
+            android:layout_gravity="center"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginRight="10dp"
-            android:text="학생회장\n 이승규"
-            android:textSize="10dp"/>
+            android:text="모바일 공학과 조직도"
+            android:textColor="#000000"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_gravity="center"/>
 
 
-
-        <Button
-            android:id="@+id/VicePresident_Student"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginLeft="10dp"
-            android:text="학생부회장\n 하혜성"
-            android:textSize="10dp"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="8"/>
 
     </LinearLayout>
 
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center"
-        android:layout_marginTop="15dp">
+        android:gravity="center"
+        android:orientation="vertical">
 
         <Button
-            android:id="@+id/Manager_Student"
+            android:id="@+id/Professor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginRight="2.5dp"
-            android:text="총무\n 안승재"
-            android:textSize="10dp"/>
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:text="지도교수\n 최두현"
+            android:background="@drawable/jojikbtn"
+            android:textSize="10dp"
+            android:textColor="#000000"
+            android:textStyle="bold"/>
 
         <Button
-            android:id="@+id/Planning_Student"
+            android:id="@+id/Assistant"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginLeft="2.5dp"
-            android:layout_marginRight="2.5dp"
-            android:text="기획부장\n 전지윤"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:text="조교\n 오은희"
+            android:background="@drawable/jojikbtn"
+            android:textColor="#000000"
+            android:textStyle="bold"
             android:textSize="10dp"/>
 
-        <Button
-            android:id="@+id/Officer_Student"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginLeft="2.5dp"
-            android:layout_marginRight="2.5dp"
-            android:text="관리부장\n 권민석"
-            android:textSize="10dp"/>
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp">
 
-        <Button
-            android:id="@+id/Ad_Student"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginLeft="2.5dp"
-            android:layout_marginRight="2.5dp"
-            android:text="홍보부장\n 최인표"
-            android:textSize="10dp"/>
+            <Button
+                android:id="@+id/President_Student"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="10dp"
+                android:text="학생회장\n 이승규"
+                android:background="@drawable/jojikbtn"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="10dp"/>
 
-        <Button
-            android:id="@+id/Academic_Student"
+
+
+            <Button
+                android:id="@+id/VicePresident_Student"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:text="학생부회장\n 하혜성"
+                android:background="@drawable/jojikbtn"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="10dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginLeft="2.5dp"
-            android:text="학술부장\n 장호성"
-            android:textSize="10dp"/>
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="4dp"
+            android:layout_marginTop="25dp">
+
+            <Button
+                android:id="@+id/Manager_Student"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="2.5dp"
+                android:text="총무\n 안승재"
+                android:background="@drawable/jojikbtn"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="10dp"/>
+
+            <Button
+                android:id="@+id/Planning_Student"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="2.5dp"
+                android:layout_marginRight="2.5dp"
+                android:background="@drawable/jojikbtn"
+                android:text="기획부장\n 전지윤"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="10dp"/>
+
+            <Button
+                android:id="@+id/Officer_Student"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="2.5dp"
+                android:layout_marginRight="2.5dp"
+                android:text="관리부장\n 권민석"
+                android:background="@drawable/jojikbtn"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="10dp"/>
+
+            <Button
+                android:id="@+id/Ad_Student"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="2.5dp"
+                android:layout_marginRight="2.5dp"
+                android:text="홍보부장\n 최인표"
+                android:background="@drawable/jojikbtn"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="10dp"/>
+
+            <Button
+                android:id="@+id/Academic_Student"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="2.5dp"
+                android:text="학술부장\n 장호성"
+                android:background="@drawable/jojikbtn"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="10dp"/>
+
+        </LinearLayout>
+
     </LinearLayout>
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="3"/>
+
 
 </LinearLayout>
