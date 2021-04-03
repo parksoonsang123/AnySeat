@@ -15,6 +15,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
+import com.example.anyseat.FreeBoardDetailActivity;
 import com.example.anyseat.MainActivity;
 import com.example.anyseat.R;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -22,6 +23,8 @@ import com.google.firebase.iid.FirebaseInstanceIdReceiver;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import java.util.Map;
 
 import static com.google.firebase.analytics.FirebaseAnalytics.Param.GROUP_ID;
 
@@ -34,13 +37,41 @@ public class FirebaseNotificationService extends FirebaseMessagingService {
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        if(remoteMessage.getNotification() != null){
-            String title = remoteMessage.getNotification().getTitle();
-            String body = remoteMessage.getNotification().getBody();
+        Log.e("Service", "pss");
+        Map<String, String> data_notify = remoteMessage.getData();
 
-            sendNotification(remoteMessage);
+        if(data_notify != null){
+            Log.e("FCMService","received");
+            String title = "게시글에 댓글이 달렸습니다.\n";
+            String body = data_notify.get("contents");
+            String postid = data_notify.get("postid");
 
-            //NotificationHelper.displayNotification(getApplicationContext(), title, body);
+            Intent intent = new Intent(this, FreeBoardDetailActivity.class);
+            intent.putExtra("postid", postid);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+            PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT);
+
+            String channelId = "mychannel";
+
+            Uri defaultUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            NotificationCompat.Builder notificationBuilder =
+                    new NotificationCompat.Builder(this,channelId)
+                            .setSmallIcon(R.mipmap.ic_launcher)
+                            .setContentTitle(title)
+                            .setAutoCancel(true)
+                            .setSound(defaultUri)
+                            .setContentIntent(pendingIntent);
+
+            NotificationManager notificationManger = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                String channelName = "channelName";
+                NotificationChannel channel = new NotificationChannel(channelId,channelName,NotificationManager.IMPORTANCE_HIGH);
+                notificationManger.createNotificationChannel(channel);
+            }
+            notificationManger.notify(0,notificationBuilder.build());
+
+
         }
     }
 
@@ -50,13 +81,13 @@ public class FirebaseNotificationService extends FirebaseMessagingService {
     }
 
 
-    private void sendNotification(RemoteMessage remoteMessage){
+    /*private void sendNotification(RemoteMessage remoteMessage){
 
         Log.e("eqweqweqwe", remoteMessage.getSenderId());
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 *//* Request code *//*, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
 
@@ -97,7 +128,7 @@ public class FirebaseNotificationService extends FirebaseMessagingService {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         notificationManager.notify(1, notificationBuilder.build());
-    }
+    }*/
 
 
     /* @Override

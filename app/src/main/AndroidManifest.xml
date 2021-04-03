@@ -11,27 +11,42 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".WriteNoticeActivity"></activity>
-        <activity android:name=".NoticeDetailActivity" />
-        <activity android:name=".MyPageActivity" />
-        <activity android:name=".FindUserActivity" />
-        <activity android:name=".SearchActivity" />
-        <activity android:name=".MainActivity2" />
-        <activity android:name=".Organization" />
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".WriteNoticeActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".NoticeDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MyPageActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".FindUserActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".SearchActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MainActivity2"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Organization"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".RegisterActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".OnlyImage" />
-        <activity android:name=".FreeBoardDetailActivity" />
-        <activity android:name=".WriteBoardActivity" />
-        <activity android:name=".FreeBoardActivity" />
-        <activity android:name=".HomepageActivity" />
-        <activity android:name=".NoticeActivity" />
+        <activity android:name=".OnlyImage"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".FreeBoardDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".WriteBoardActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".FreeBoardActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".HomepageActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".NoticeActivity"
+            android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="firebase_messaging_auto_init_enabled"

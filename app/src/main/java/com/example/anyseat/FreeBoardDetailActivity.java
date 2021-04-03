@@ -35,6 +35,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -100,6 +101,10 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         final String postid = intent.getStringExtra("id");
+
+        final String alrampostid = intent.getStringExtra("postid");
+
+
 
 
 
@@ -210,12 +215,54 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                 InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(fbdedit.getWindowToken(),0);
 
+                //댓글 시 알림
                 reference9 = FirebaseDatabase.getInstance().getReference("Post").child(postid);
                 reference9.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        PostItem item = snapshot.getValue(PostItem.class);
-                        sendNotification(item.getUserid(), "pss", 1, "댓글이 작성되었습니다.", "key");
+                        final PostItem item = snapshot.getValue(PostItem.class);
+                        final String reciverid = item.getUserid();
+                        reference10 = FirebaseDatabase.getInstance().getReference("UserList").child(reciverid);
+                        reference10.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                final Token item1 = snapshot.getValue(Token.class);
+                                Runnable runnable = new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        APIService apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
+                                        apiService.sendNotification(new NotificationData(new SendData(item.getContents(), item.getPostid()), item1.getToken()))
+                                                .enqueue(new Callback<MyResponse>() {
+                                                    @Override
+                                                    public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                                        if(response.code() == 200){
+                                                            if(response.body().success == 1){
+                                                                Log.e("Notification", "success");
+                                                            }
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<MyResponse> call, Throwable t) {
+
+                                                    }
+                                                });
+                                    }
+                                };
+
+
+                                if(!userId.equals(reciverid)){
+                                    Thread tr = new Thread(runnable);
+                                    tr.start();
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                     }
 
                     @Override
@@ -229,6 +276,249 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.free_board_recyclerview2);
         LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
+
+        if(alrampostid != null){    //알림으로 들어왔을 때
+
+            reference5 = FirebaseDatabase.getInstance().getReference("Post").child(alrampostid);
+            reference5.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    PostItem item = snapshot.getValue(PostItem.class);
+                    if(item.getUserid().equals(userId)){
+                        fbddelbtn.setVisibility(View.VISIBLE);
+                        fbdremakebtn.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        fbddelbtn.setVisibility(View.INVISIBLE);
+                        fbdremakebtn.setVisibility(View.INVISIBLE);
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+            reference = FirebaseDatabase.getInstance().getReference("Post").child(alrampostid);
+            reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                    list.clear();
+                    PostItem item = snapshot.getValue(PostItem.class);
+                    list.add(new FreeBoardDetailItem(item.getCommentcnt(), item.getGoodcnt(), item.getTitle(), item.getContents(), item.getWritetime(), postid, userId, item.getImageexist(), item.getImageurilist(), item.getImagenamelist(), Code.ViewType.FIRST));
+                    reference2 = FirebaseDatabase.getInstance().getReference("Reply");
+                    reference2.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                                ReplyItem item1 = snapshot1.getValue(ReplyItem.class);
+                                if(item1.getPostid().equals(alrampostid)){
+                                    //FreeBoardDetailItem item1 = snapshot1.getValue(FreeBoardDetailItem.class);
+                                    list.add(new FreeBoardDetailItem(item1.getContents(), item1.getWritetime(), item1.getPostid(), item1.getReplyid(), item1.getUserid(), Code.ViewType.SECOND));
+                                }
+                            }
+
+                            reference3 = FirebaseDatabase.getInstance().getReference("Good").child(userId).child(alrampostid);
+                            reference3.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    //Toast.makeText(FreeBoardDetailActivity.this, "실행", Toast.LENGTH_SHORT).show();
+                                    GoodItem item = snapshot.getValue(GoodItem.class);
+                                    if(item == null){
+                                        list.get(0).setPress("0");
+                                    }
+                                    else{
+                                        list.get(0).setPress(item.getPress());
+                                    }
+
+                                    adapter = new FreeBoardDetailAdapter(list, userId, FreeBoardDetailActivity.this);
+                                    adapter.setOnGoodClickListner(new FreeBoardDetailAdapter.OnGoodClickListener() {
+                                        @Override
+                                        public void onGoodClick(View v, int position, ImageView btn) {
+                                            Intent intent = getIntent();
+                                            String postId = intent.getStringExtra("id");
+                                            goodplus(postId, userId, btn);
+                                        }
+                                    });
+                                    adapter.setOnDeleteClickListener(new FreeBoardDetailAdapter.OnDeleteClickListner() {
+                                        @Override
+                                        public void onDeleteClick(View v, final int position, Button btn) {
+                                            Intent intent = getIntent();
+                                            final String postId = intent.getStringExtra("id");
+
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext(), R.style.MyDialogTheme);
+
+
+                                            builder.setMessage("삭제하시겠습니까?");
+
+
+                                            builder.setPositiveButton("확인",
+                                                    new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            commentdelete(alrampostid, position);
+                                                        }
+                                                    });
+                                            builder.setNegativeButton("취소",
+                                                    new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+
+                                                        }
+                                                    });
+                                            builder.show();
+
+                                            //commentminus(postid);
+                                        }
+                                    });
+                                    recyclerView.setAdapter(adapter);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {}
+                    });
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {}
+            });
+
+
+
+            reference.addChildEventListener(new ChildEventListener() {  //댓글,좋아요 개수 변화
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {}
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                    PostItem item = new PostItem();
+                    if(snapshot.getKey().equals("commentcnt")){
+                        item.setCommentcnt(snapshot.getValue().toString());
+                        list.get(0).setCommentcnt(item.getCommentcnt());
+                    }
+                    if(snapshot.getKey().equals("goodcnt")){
+                        item.setGoodcnt(snapshot.getValue().toString());
+                        list.get(0).setGoodcnt(item.getGoodcnt());
+                    }
+
+                    reference4 = FirebaseDatabase.getInstance().getReference("Post").child(alrampostid);
+                    reference4.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            list.clear();
+                            PostItem item = snapshot.getValue(PostItem.class);
+                            list.add(new FreeBoardDetailItem(item.getCommentcnt(), item.getGoodcnt(), item.getTitle(), item.getContents(), item.getWritetime(), postid, userId, item.getImageexist(), item.getImageurilist(), item.getImagenamelist(), Code.ViewType.FIRST));
+                            reference2 = FirebaseDatabase.getInstance().getReference("Reply");
+                            reference2.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                                        ReplyItem item1 = snapshot1.getValue(ReplyItem.class);
+                                        if(item1.getPostid().equals(alrampostid)){
+                                            list.add(new FreeBoardDetailItem(item1.getContents(), item1.getWritetime(), item1.getPostid(), item1.getReplyid(), item1.getUserid(), Code.ViewType.SECOND));
+                                        }
+                                    }
+
+                                    reference3 = FirebaseDatabase.getInstance().getReference("Good").child(userId).child(alrampostid);
+                                    reference3.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            GoodItem item = snapshot.getValue(GoodItem.class);
+                                            if(item == null){
+                                                list.get(0).setPress("0");
+                                            }
+                                            else{
+                                                list.get(0).setPress(item.getPress());
+                                            }
+
+                                            adapter = new FreeBoardDetailAdapter(list, userId, FreeBoardDetailActivity.this);
+                                            adapter.setOnGoodClickListner(new FreeBoardDetailAdapter.OnGoodClickListener() {
+                                                @Override
+                                                public void onGoodClick(View v, int position, ImageView btn) {
+                                                    Intent intent = getIntent();
+                                                    String postId = intent.getStringExtra("id");
+                                                    goodplus(postId, userId, btn);
+                                                }
+                                            });
+                                            adapter.setOnDeleteClickListener(new FreeBoardDetailAdapter.OnDeleteClickListner() {
+                                                @Override
+                                                public void onDeleteClick(View v, final int position, Button btn) {
+                                                    Intent intent = getIntent();
+                                                    final String postId = intent.getStringExtra("id");
+
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext(), R.style.MyDialogTheme);
+                                                    builder.setMessage("삭제하시겠습니까?");
+
+
+                                                    builder.setPositiveButton("확인",
+                                                            new DialogInterface.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                    commentdelete(alrampostid, position);
+                                                                }
+                                                            });
+                                                    builder.setNegativeButton("취소",
+                                                            new DialogInterface.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                                }
+                                                            });
+                                                    builder.show();
+                                                }
+                                            });
+                                            recyclerView.setAdapter(adapter);
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {}
+                            });
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {}
+                    });
+
+
+
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot snapshot) {}
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {}
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {}
+            });
+
+
+
+            return;
+        }
+
 
 
         reference5 = FirebaseDatabase.getInstance().getReference("Post").child(postid);
@@ -465,6 +755,9 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {}
         });
+
+
+
 
     }
 
@@ -730,7 +1023,7 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
     }
 
 
-    private void sendNotification(final String receiverId, final String senderName, final int type, final String content, final String key) {
+    /*private void sendNotification(final String receiverId, final String senderName, final int type, final String content, final String key) {
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("UserList").child(receiverId);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -767,5 +1060,5 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
 
             }
         });
-    }
+    }*/
 }
