@@ -77,6 +77,8 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
     DatabaseReference reference8;
     DatabaseReference reference9;
     DatabaseReference reference10;
+    DatabaseReference reference11;
+    DatabaseReference reference12;
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     String userId;
@@ -99,16 +101,19 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_free_board_detail);
 
+        userId = mAuth.getCurrentUser().getUid();
+
         Intent intent = getIntent();
         final String postid = intent.getStringExtra("id");
 
         final String alrampostid = intent.getStringExtra("postid");
 
-
-
-
-
-        userId = mAuth.getCurrentUser().getUid();
+        final String alram = intent.getStringExtra("alram");
+        final String alramid2 = intent.getStringExtra("alramid");
+        if(alram != null && alram.equals("1")){  //알림 삭제
+            reference12 = FirebaseDatabase.getInstance().getReference("Alram").child(userId).child(alramid2);
+            reference12.removeValue();
+        }
 
         fbdtime = findViewById(R.id.freeboarddetail_time);
 
@@ -118,7 +123,15 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
         fbdbackbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                if(alram != null && alram.equals("1")){
+                    Intent intent1 = new Intent(FreeBoardDetailActivity.this, MainActivity2.class);
+                    intent1.putExtra("alram", "1");
+                    startActivity(intent1);
+                    finish();
+                }
+                else{
+                    finish();
+                }
             }
         });
 
@@ -187,9 +200,9 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = getIntent();
-                String postid = intent.getStringExtra("id");
+                final String postid = intent.getStringExtra("id");
                 reference = FirebaseDatabase.getInstance().getReference("Reply").push();
-                String replyid = reference.getKey();
+                final String replyid = reference.getKey();
                 long time = System.currentTimeMillis();
 
                 HashMap result = new HashMap<>();
@@ -216,12 +229,30 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                 inputMethodManager.hideSoftInputFromWindow(fbdedit.getWindowToken(),0);
 
                 //댓글 시 알림
+
                 reference9 = FirebaseDatabase.getInstance().getReference("Post").child(postid);
                 reference9.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         final PostItem item = snapshot.getValue(PostItem.class);
                         final String reciverid = item.getUserid();
+
+                        reference11 = FirebaseDatabase.getInstance().getReference("Alram").child(reciverid).push();
+                        final String alramid = reference11.getKey();
+
+                        long time = System.currentTimeMillis();
+
+                        HashMap result = new HashMap<>();
+
+                        result.put("type", "1");
+                        result.put("writetime", makeTimeStamp(time));
+                        result.put("postid", postid);
+                        result.put("alramid", alramid);
+                        result.put("replyid", replyid);
+
+                        reference11.setValue(result);
+
+
                         reference10 = FirebaseDatabase.getInstance().getReference("UserList").child(reciverid);
                         reference10.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -231,7 +262,7 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                                     @Override
                                     public void run() {
                                         APIService apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
-                                        apiService.sendNotification(new NotificationData(new SendData(item.getContents(), item.getPostid()), item1.getToken()))
+                                        apiService.sendNotification(new NotificationData(new SendData(item.getContents(), item.getPostid(), "1", alramid, replyid), item1.getToken()))
                                                 .enqueue(new Callback<MyResponse>() {
                                                     @Override
                                                     public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
@@ -254,6 +285,8 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                                 if(!userId.equals(reciverid)){
                                     Thread tr = new Thread(runnable);
                                     tr.start();
+
+
                                 }
 
                             }

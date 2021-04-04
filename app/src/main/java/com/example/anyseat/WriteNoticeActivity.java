@@ -11,12 +11,19 @@ import android.content.ClipData;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.anyseat.Notifications.APIService;
+import com.example.anyseat.Notifications.Client;
+import com.example.anyseat.Notifications.MyResponse;
+import com.example.anyseat.Notifications.NotificationData;
+import com.example.anyseat.Notifications.SendData;
+import com.example.anyseat.Notifications.Token;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -36,12 +43,17 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class WriteNoticeActivity extends AppCompatActivity {
 
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
     private DatabaseReference databaseReference2;
     private DatabaseReference databaseReference3;
+    private DatabaseReference databaseReference4;
     private FirebaseStorage storage;
 
     EditText writetitle;
@@ -68,6 +80,8 @@ public class WriteNoticeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_write_notice);
+
+
 
         writetitle = findViewById(R.id.notice_title);
         writecontents = findViewById(R.id.notice_contents);
@@ -151,7 +165,7 @@ public class WriteNoticeActivity extends AppCompatActivity {
 
                     database = FirebaseDatabase.getInstance();
                     databaseReference = database.getReference("Notice").push();
-                    String postid2 = databaseReference.getKey();
+                    final String postid2 = databaseReference.getKey();
 
                     time = System.currentTimeMillis();
 
@@ -166,7 +180,79 @@ public class WriteNoticeActivity extends AppCompatActivity {
                     result.put("imagenamelist", list3);
 
                     databaseReference.setValue(result);
-                    finish();
+
+                    //공지사항 게시 알림
+                    databaseReference2 = database.getReference("UserInfo");
+                    databaseReference2.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                                final UserInfo item = snapshot1.getValue(UserInfo.class);
+                                if(item.Master == 0){
+
+                                    databaseReference4 = FirebaseDatabase.getInstance().getReference("Alram").child(item.uid).push();
+                                    final String alramid = databaseReference4.getKey();
+
+                                    long time = System.currentTimeMillis();
+
+                                    HashMap result = new HashMap<>();
+
+                                    result.put("type", "2");
+                                    result.put("writetime", makeTimeStamp(time));
+                                    result.put("postid", postid2);
+                                    result.put("alramid", alramid);
+
+                                    databaseReference4.setValue(result);
+
+                                    databaseReference3 = database.getReference("UserList").child(item.uid);
+                                    databaseReference3.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            final Token item1 = snapshot.getValue(Token.class);
+                                            Runnable runnable = new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    APIService apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
+                                                    apiService.sendNotification(new NotificationData(new SendData(writetitle.getText().toString(), postid2, "2", alramid, ""), item1.getToken()))
+                                                            .enqueue(new Callback<MyResponse>() {
+                                                                @Override
+                                                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                                                    if(response.code() == 200){
+                                                                        if(response.body().success == 1){
+                                                                            Log.e("Notification", "success");
+                                                                        }
+                                                                    }
+                                                                }
+
+                                                                @Override
+                                                                public void onFailure(Call<MyResponse> call, Throwable t) {
+
+                                                                }
+                                                            });
+                                                }
+                                            };
+
+                                            Thread tr = new Thread(runnable);
+                                            tr.start();
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+
+                   finish();
 
 
                 }
@@ -282,7 +368,7 @@ public class WriteNoticeActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
 
         databaseReference = database.getReference("Notice").push();
-        String postid2 = databaseReference.getKey();
+        final String postid2 = databaseReference.getKey();
 
         time = System.currentTimeMillis();
 
@@ -297,6 +383,80 @@ public class WriteNoticeActivity extends AppCompatActivity {
         result.put("imagenamelist", list3);
 
         databaseReference.setValue(result);
+
+
+        //공지사항 게시 알림
+        databaseReference2 = database.getReference("UserInfo");
+        databaseReference2.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                    final UserInfo item = snapshot1.getValue(UserInfo.class);
+                    if(item.Master == 0){
+
+                        databaseReference4 = FirebaseDatabase.getInstance().getReference("Alram").child(item.uid).push();
+                        final String alramid = databaseReference4.getKey();
+
+                        long time = System.currentTimeMillis();
+
+                        HashMap result = new HashMap<>();
+
+                        result.put("type", "2");
+                        result.put("writetime", makeTimeStamp(time));
+                        result.put("postid", postid2);
+                        result.put("alramid", alramid);
+
+                        databaseReference4.setValue(result);
+
+                        databaseReference3 = database.getReference("UserList").child(item.uid);
+                        databaseReference3.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                final Token item1 = snapshot.getValue(Token.class);
+                                Runnable runnable = new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        APIService apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
+                                        apiService.sendNotification(new NotificationData(new SendData(writetitle.getText().toString(), postid2, "2", alramid, ""), item1.getToken()))
+                                                .enqueue(new Callback<MyResponse>() {
+                                                    @Override
+                                                    public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                                        if(response.code() == 200){
+                                                            if(response.body().success == 1){
+                                                                Log.e("Notification", "success");
+                                                            }
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<MyResponse> call, Throwable t) {
+
+                                                    }
+                                                });
+                                    }
+                                };
+
+                                Thread tr = new Thread(runnable);
+                                tr.start();
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+
         finish();
 
     }

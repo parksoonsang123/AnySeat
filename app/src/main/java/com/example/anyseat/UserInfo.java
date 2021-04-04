@@ -7,7 +7,7 @@ public class UserInfo {
     public int Grade=1;
     public String using = "false";
     public String uid;
-    public int Master;
+    public int Master = 0;
 
     public UserInfo(){
 

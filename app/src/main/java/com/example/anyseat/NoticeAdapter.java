@@ -42,7 +42,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         PostItem2 item = mDataList.get(position);
-        holder.contents.setText(item.getContents());
+        holder.contents.setText(item.getTitle());
         holder.writetime.setText(item.getWritetime());
 
         if(mListener != null){

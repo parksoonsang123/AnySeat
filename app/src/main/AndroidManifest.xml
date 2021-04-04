@@ -11,23 +11,33 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".WriteNoticeActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity android:name=".NoticeDetailActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".MyPageActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".FindUserActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".SearchActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".MainActivity2"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Organization"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".RegisterActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".MainActivity"
+        <activity android:name=".AlramActivity"></activity>
+        <activity
+            android:name=".WriteNoticeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".NoticeDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MyPageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".FindUserActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SearchActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainActivity2"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Organization"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".RegisterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,18 +45,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".OnlyImage"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".FreeBoardDetailActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".WriteBoardActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".FreeBoardActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".HomepageActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".NoticeActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".OnlyImage"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".FreeBoardDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".WriteBoardActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".FreeBoardActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".HomepageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".NoticeActivity"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="firebase_messaging_auto_init_enabled"
@@ -64,8 +80,8 @@
             </intent-filter>
         </service>
     </application>
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

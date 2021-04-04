@@ -39,6 +39,7 @@ public class NoticeDetailActivity extends AppCompatActivity {
     DatabaseReference reference3;
     DatabaseReference reference2;
     DatabaseReference reference1;
+    DatabaseReference reference12;
     FirebaseStorage storage;
 
     RecyclerView recyclerView;
@@ -57,6 +58,13 @@ public class NoticeDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         final String postid = intent.getStringExtra("postid");
+
+        final String alram = intent.getStringExtra("alram");
+        final String alramid2 = intent.getStringExtra("alramid");
+        if(alram != null && alram.equals("1")){  //알림 삭제
+            reference12 = FirebaseDatabase.getInstance().getReference("Alram").child(userId).child(alramid2);
+            reference12.removeValue();
+        }
 
         del = findViewById(R.id.notice_detail_del);
         del.setOnClickListener(new View.OnClickListener() {
@@ -89,7 +97,15 @@ public class NoticeDetailActivity extends AppCompatActivity {
         fbdbackbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                if(alram != null && alram.equals("1")){
+                    Intent intent1 = new Intent(NoticeDetailActivity.this, MainActivity2.class);
+                    intent1.putExtra("alram", "2");
+                    startActivity(intent1);
+                    finish();
+                }
+                else{
+                    finish();
+                }
             }
         });
         fbdtitle = findViewById(R.id.freeboarddetail_title);
