@@ -1051,7 +1051,7 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
     }
 
     private String makeTimeStamp(long in){
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+        SimpleDateFormat format = new SimpleDateFormat("MM/dd HH:mm:ss");
         return format.format(in);
     }
 
