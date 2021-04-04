@@ -134,10 +134,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void signIn(final String email, final String password){
-
-
-
-
         //firebase 로그인
 
         mAuth.signInWithEmailAndPassword(email, password)

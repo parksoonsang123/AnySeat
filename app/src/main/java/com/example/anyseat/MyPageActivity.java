@@ -1,18 +1,24 @@
 package com.example.anyseat;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,12 +48,15 @@ public class MyPageActivity extends AppCompatActivity {
 
     ImageView back;
 
-
+    UserInfo user;
+    FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_page);
+
+        firebaseUser = mAuth.getCurrentUser();
 
         back = findViewById(R.id.mypage_back);
         back.setOnClickListener(new View.OnClickListener() {
@@ -101,6 +110,7 @@ public class MyPageActivity extends AppCompatActivity {
                 for(DataSnapshot snapshot1 : snapshot.getChildren()){
                     UserInfo item = snapshot1.getValue(UserInfo.class);
                     if(item.uid != null && item.uid.equals(userId)){
+                        user = item;
                         textView1.setText(item.Name);
                         textView2.setText(item.Grade+"");
                         textView3.setText(item.Email);
