@@ -1,9 +1,12 @@
 package com.example.anyseat;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +18,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,6 +42,7 @@ public class MyPageFragment extends Fragment {
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     String userId;
+    UserInfo user;
 
     TextView textView1;
     TextView textView2;
@@ -93,6 +98,7 @@ public class MyPageFragment extends Fragment {
                 for(DataSnapshot snapshot1 : snapshot.getChildren()){
                     UserInfo item = snapshot1.getValue(UserInfo.class);
                     if(item.uid != null && item.uid.equals(userId)){
+                        user = item;
                         textView1.setText(item.Name);
                         textView2.setText(item.Grade+"");
                         textView3.setText(item.Email);
@@ -107,15 +113,15 @@ public class MyPageFragment extends Fragment {
             }
         });
 
-
-
-
-
-
-
-
-
-
+        //비밀번호변경
+        Button EditButton = view.findViewById(R.id.remakge);
+        EditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditDialog editDialog = new EditDialog(view.getContext(), user.Password);
+                editDialog.show();
+            }
+        });
 
         // 로그아웃
         Button LogOutButton = view.findViewById(R.id.LogOutButton);
@@ -129,7 +135,32 @@ public class MyPageFragment extends Fragment {
             }
         });
 
+        //회원탈퇴
+        Button SignOutButton = view.findViewById(R.id.out);
+        SignOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder signout = new AlertDialog.Builder(view.getContext());
+                signout.setTitle("회원탈퇴");
+                signout.setMessage("한번 회원 탈퇴한 계정의 정보는 개발자도 복구시켜주지 않습니다. 정말 삭제하실건가요....?");
+                signout.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        FirebaseAuth.getInstance().getCurrentUser().delete();
+                        reference2.child(user.Password).removeValue();
+                        SaveSharedPreference.setUserName(((MainActivity)MainActivity.context), "", "", false);
+                        System.exit(0);
+                    }
+                });
+                signout.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
+                    }
+                });
+                signout.show();
+            }
+        });
 
         return view;
     }
