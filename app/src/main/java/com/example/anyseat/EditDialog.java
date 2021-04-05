@@ -5,7 +5,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +35,7 @@ public class EditDialog extends Dialog {
 
     String Password;
     UserInfo userInfo;
-
+    int grade;
     public EditDialog(@NonNull Context context, String Password) {
         super(context);
         this.context = context;
@@ -67,6 +69,29 @@ public class EditDialog extends Dialog {
         OK = findViewById(R.id.edit_ok_text);
         NO = findViewById(R.id.edit_no_text);
 
+        RadioGroup gradeRadio = (RadioGroup)findViewById(R.id.edit_gradeGroup);
+        gradeRadio.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                switch(i){
+                    case R.id.edit_firstGrade:
+                        grade = 1;
+                        break;
+                    case R.id.edit_secondGrade:
+                        grade = 2;
+                        break;
+                    case R.id.edit_thirdGrade:
+                        grade = 3;
+                        break;
+                    case R.id.edit_forthGrade:
+                        grade = 4;
+                        break;
+
+                }
+            }
+        });
+        if(grade==0) grade = 1;
+
         OK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,6 +99,7 @@ public class EditDialog extends Dialog {
                 String c = Pass_Conf.getText().toString();
                 if(p.equals(c)){
                     userInfo.Password = p;
+                    userInfo.Grade = grade;
                     reference.child(Password).removeValue();
                     user.updatePassword(p);
                     reference.child(p).setValue(userInfo);
