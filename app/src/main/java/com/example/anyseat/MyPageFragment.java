@@ -194,13 +194,26 @@ public class MyPageFragment extends Fragment {
                 signout.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        reference2.child(user.uid).removeValue();
-                        SaveSharedPreference.setUserName(((MainActivity)MainActivity.context), "", "", false);
-                        reference3.child(user.uid).removeValue();
-                        for(int i=0;i<list.size();i++){
+                        int i=0;
+                        for(i=0;i<=list.size();i++){
+                            if(i==list.size()) break;
                             String postid = list.get(i).getPostid();
                             commentsdelete(postid);
                         }
+
+                        /*if(i == list.size()){
+                            reference2.child(user.uid).removeValue();
+                            SaveSharedPreference.setUserName(((MainActivity)MainActivity.context), "", "", false);
+                            reference3.child(user.uid).removeValue();
+                            mAuth.getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        System.exit(0);
+                                    }
+                                }
+                            });
+                        }*/
 
                     }
                 });
@@ -219,16 +232,7 @@ public class MyPageFragment extends Fragment {
 
     private void postdelete(String postid){
         //String postid = list.get(position).getPostid();
-        de1_reference = FirebaseDatabase.getInstance().getReference("Post").child(postid);
-        de1_reference.removeValue();
-        mAuth.getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    System.exit(0);
-                }
-            }
-        });
+
     }
 
     private void commentsdelete(final String postid){
@@ -252,10 +256,6 @@ public class MyPageFragment extends Fragment {
             }
         });
 
-        imagedelete(postid);
-    }
-
-    private void imagedelete(final String postid){
         de5_reference = FirebaseDatabase.getInstance().getReference("Post").child(postid);
         de5_reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -267,10 +267,8 @@ public class MyPageFragment extends Fragment {
                         StorageReference storageRef = storage.getReferenceFromUrl("gs://anyseat-4e964.appspot.com/").child("images/"+item.getImagenamelist().get(i));
                         storageRef.delete();
                     }
-                    gooddelete(postid);
                 }
                 else{
-                    gooddelete(postid);
                 }
             }
 
@@ -279,9 +277,7 @@ public class MyPageFragment extends Fragment {
 
             }
         });
-    }
 
-    private void gooddelete(final String postid){
         Userlist2.clear();
 
         de6_reference = FirebaseDatabase.getInstance().getReference("Post").child(postid);
@@ -300,13 +296,27 @@ public class MyPageFragment extends Fragment {
 
                             for(int i=0; i<Userlist2.size(); i++){
 
-                                de7_reference = FirebaseDatabase.getInstance().getReference("Good").child(Userlist2.get(i).getUID()).child(item.getPostid());
-                                if(de7_reference != null){
-                                    de7_reference.removeValue();
-                                }
+                                de8_reference = FirebaseDatabase.getInstance().getReference("Good").child(Userlist2.get(i).getUID()).child(postid);
+                                de8_reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        String s = snapshot.child("press").getValue(String.class);
+                                        if(s==null){
+
+                                        }
+                                        else{
+                                            de8_reference.removeValue();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
                             }
 
-                            alarmdelete(postid);
                         }
 
                         @Override
@@ -316,7 +326,6 @@ public class MyPageFragment extends Fragment {
                     });
                 }
                 else{
-                    alarmdelete(postid);
                 }
             }
 
@@ -326,22 +335,6 @@ public class MyPageFragment extends Fragment {
             }
         });
 
-    }
-
-    //AlramItem temp;
-    //String s;
-
-    private void alarmdelete2(String postId, String a, String b){
-
-        for(int i=0;i<alramidlist.size();i++){
-            de8_reference = FirebaseDatabase.getInstance().getReference("Alram").child(alramuseridlist.get(i)).child(alramidlist.get(i));
-            de8_reference.removeValue();
-        }
-
-        postdelete(postId);
-    }
-
-    private void alarmdelete(final String postId){
         Userlist3.clear();
         alramidlist.clear();
         alramuseridlist.clear();
@@ -362,17 +355,12 @@ public class MyPageFragment extends Fragment {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for(DataSnapshot snapshot1 : snapshot.getChildren()){
                                 AlramItem item = snapshot1.getValue(AlramItem.class);
-                                if(item.getPostid().equals(postId)){
+                                if(item.getPostid().equals(postid)){
                                     alramidlist.add(item.getAlramid());
                                     alramuseridlist.add(Userlist3.get(idx).getUID());
 
-
-
-                                    /*reference14 = FirebaseDatabase.getInstance().getReference("Alram").child(alramuseridlist.get(idx)).child(alramidlist.get(idx));
-                                    reference14.removeValue();*/
                                 }
                             }
-                            //alarmdelete2(postId, alramidlist, alramuseridlist);
                         }
 
                         @Override
@@ -384,10 +372,8 @@ public class MyPageFragment extends Fragment {
                 }
 
                 if(Userlist3.size() == 0){
-                    postdelete(postId);
+
                 }
-
-
             }
 
             @Override
@@ -395,5 +381,35 @@ public class MyPageFragment extends Fragment {
 
             }
         });
+
+        for(int i=0;i<alramidlist.size();i++){
+            de8_reference = FirebaseDatabase.getInstance().getReference("Alram").child(alramuseridlist.get(i)).child(alramidlist.get(i));
+            de8_reference.removeValue();
+        }
+
+        de1_reference = FirebaseDatabase.getInstance().getReference("Post").child(postid);
+        de1_reference.removeValue();
+    }
+
+    private void imagedelete(final String postid){
+
+    }
+
+    private void gooddelete(final String postid){
+
+
+    }
+
+    //AlramItem temp;
+    //String s;
+
+    private void alarmdelete2(String postId){
+
+
+
+    }
+
+    private void alarmdelete(final String postId){
+
     }
 }
