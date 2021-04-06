@@ -161,7 +161,7 @@ public class BoardFragment extends Fragment {
                     }
 
                     for(int i=0; i<userlist.size(); i++){
-                        reference6 = FirebaseDatabase.getInstance().getReference("Good").child(userlist.get(i)).child(list.get(position).getPostid());
+                        reference6 = FirebaseDatabase.getInstance().getReference("Good").child(list.get(position).getPostid()).child(userlist.get(i));
                         if(reference6 != null){
                             reference6.removeValue();
                         }

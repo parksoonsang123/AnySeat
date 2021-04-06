@@ -360,7 +360,7 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                                 }
                             }
 
-                            reference3 = FirebaseDatabase.getInstance().getReference("Good").child(userId).child(alrampostid);
+                            reference3 = FirebaseDatabase.getInstance().getReference("Good").child(alrampostid).child(userId);
                             reference3.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -471,7 +471,7 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                                         }
                                     }
 
-                                    reference3 = FirebaseDatabase.getInstance().getReference("Good").child(userId).child(alrampostid);
+                                    reference3 = FirebaseDatabase.getInstance().getReference("Good").child(alrampostid).child(userId);
                                     reference3.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -602,7 +602,7 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                             }
                         }
 
-                        reference3 = FirebaseDatabase.getInstance().getReference("Good").child(userId).child(postid);
+                        reference3 = FirebaseDatabase.getInstance().getReference("Good").child(postid).child(userId);
                         reference3.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -713,7 +713,7 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                                     }
                                 }
 
-                                reference3 = FirebaseDatabase.getInstance().getReference("Good").child(userId).child(postid);
+                                reference3 = FirebaseDatabase.getInstance().getReference("Good").child(postid).child(userId);
                                 reference3.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -853,7 +853,7 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
 
     public void goodplus(final String postId, final String userId, ImageView btn){
 
-        reference2 = FirebaseDatabase.getInstance().getReference("Good").child(userId).child(postId);
+        reference2 = FirebaseDatabase.getInstance().getReference("Good").child(postId).child(userId);
         reference2.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -872,7 +872,7 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
 
                                 reference.setValue(item);
 
-                                reference = FirebaseDatabase.getInstance().getReference("Good").child(userId).child(postId);
+                                reference = FirebaseDatabase.getInstance().getReference("Good").child(postId).child(userId);
                                 HashMap result = new HashMap<>();
                                 result.put("press", "0");
 
@@ -900,7 +900,7 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                                 item.setGoodcnt(goodcnt2);
                                 reference.setValue(item);
 
-                                reference = FirebaseDatabase.getInstance().getReference("Good").child(userId).child(postId);
+                                reference = FirebaseDatabase.getInstance().getReference("Good").child(postId).child(userId);
                                 HashMap result = new HashMap<>();
                                 result.put("press", "1");
                                 reference.setValue(result);
@@ -929,7 +929,7 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                             item.setGoodcnt(goodcnt2);
                             reference.setValue(item);
 
-                            reference = FirebaseDatabase.getInstance().getReference("Good").child(userId).child(postId);
+                            reference = FirebaseDatabase.getInstance().getReference("Good").child(postId).child(userId);
                             HashMap result = new HashMap<>();
                             result.put("press", "1");
                             reference.setValue(result);
@@ -1033,7 +1033,7 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
 
                             for(int i=0; i<Userlist2.size(); i++){
 
-                                reference7 = FirebaseDatabase.getInstance().getReference("Good").child(Userlist2.get(i).getUID()).child(item.getPostid());
+                                reference7 = FirebaseDatabase.getInstance().getReference("Good").child(item.getPostid()).child(Userlist2.get(i).getUID());
                                 if(reference7 != null){
                                     reference7.removeValue();
                                 }

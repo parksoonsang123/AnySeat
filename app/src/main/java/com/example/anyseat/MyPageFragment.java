@@ -75,6 +75,8 @@ public class MyPageFragment extends Fragment {
     TextView textView2;
     TextView textView3;
 
+    int flag = 0;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -194,10 +196,8 @@ public class MyPageFragment extends Fragment {
                 signout.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        reference2.child(user.uid).removeValue();
-                        SaveSharedPreference.setUserName(((MainActivity)MainActivity.context), "", "", false);
-                        reference3.child(user.uid).removeValue();
                         for(int i=0;i<list.size();i++){
+                            flag = i;
                             String postid = list.get(i).getPostid();
                             commentsdelete(postid);
                         }
@@ -221,14 +221,21 @@ public class MyPageFragment extends Fragment {
         //String postid = list.get(position).getPostid();
         de1_reference = FirebaseDatabase.getInstance().getReference("Post").child(postid);
         de1_reference.removeValue();
-        mAuth.getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    System.exit(0);
+
+        if(flag == list.size()-1){
+            reference2.child(user.uid).removeValue();
+            SaveSharedPreference.setUserName(((MainActivity)MainActivity.context), "", "", false);
+            reference3.child(user.uid).removeValue();
+            mAuth.getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        System.exit(0);
+                    }
                 }
-            }
-        });
+            });
+        }
+
     }
 
     private void commentsdelete(final String postid){
@@ -300,9 +307,9 @@ public class MyPageFragment extends Fragment {
 
                             for(int i=0; i<Userlist2.size(); i++){
 
-                                de7_reference = FirebaseDatabase.getInstance().getReference("Good").child(Userlist2.get(i).getUID()).child(item.getPostid());
-                                if(de7_reference != null){
-                                    de7_reference.removeValue();
+                                de3_reference = FirebaseDatabase.getInstance().getReference("Good").child(item.getPostid());
+                                if(de3_reference != null){
+                                    de3_reference.removeValue();
                                 }
                             }
 
@@ -331,7 +338,7 @@ public class MyPageFragment extends Fragment {
     //AlramItem temp;
     //String s;
 
-    private void alarmdelete2(String postId, String a, String b){
+    private void alarmdelete2(String postId){
 
         for(int i=0;i<alramidlist.size();i++){
             de8_reference = FirebaseDatabase.getInstance().getReference("Alram").child(alramuseridlist.get(i)).child(alramidlist.get(i));
@@ -372,7 +379,7 @@ public class MyPageFragment extends Fragment {
                                     reference14.removeValue();*/
                                 }
                             }
-                            //alarmdelete2(postId, alramidlist, alramuseridlist);
+                            alarmdelete2(postId);
                         }
 
                         @Override
