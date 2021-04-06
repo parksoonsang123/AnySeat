@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.anyseat.Notifications.Token;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,6 +42,7 @@ public class MyPageFragment extends Fragment {
 
     private ArrayList<PostItem> list = new ArrayList<>();
     private ArrayList<String> userlist = new ArrayList<>();
+    private ArrayList<Token> Userlist2 = new ArrayList<>();
 
     DatabaseReference reference;
     DatabaseReference reference2;
@@ -280,12 +282,12 @@ public class MyPageFragment extends Fragment {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for(DataSnapshot snapshot1 : snapshot.getChildren()){
-                                userlist.add(snapshot1.getValue().toString());
+                                Userlist2.add(snapshot1.getValue(Token.class));
                             }
 
-                            for(int i=0; i<userlist.size(); i++){
-                                de5_reference = FirebaseDatabase.getInstance().getReference("Good").child(userlist.get(i)).child(item.getPostid());
-                                if(de5_reference != null){
+                            for(int i=0; i<Userlist2.size(); i++){
+                                de5_reference = FirebaseDatabase.getInstance().getReference("Good").child(Userlist2.get(i).getUID()).child(item.getPostid());
+                                if(de5_reference!=null) {
                                     de5_reference.removeValue();
                                 }
                             }

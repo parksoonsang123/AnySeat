@@ -63,6 +63,8 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
     Button fbdsendbtn;
 
     private ArrayList<FreeBoardDetailItem> list = new ArrayList<>();
+    private ArrayList<Token> Userlist2 = new ArrayList<>();
+    private ArrayList<Token> Userlist3 = new ArrayList<>();
 
     RecyclerView recyclerView;
     FreeBoardDetailAdapter adapter;
@@ -79,6 +81,8 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
     DatabaseReference reference10;
     DatabaseReference reference11;
     DatabaseReference reference12;
+    DatabaseReference reference13;
+    DatabaseReference reference14;
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     String userId;
@@ -242,60 +246,62 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
 
                         long time = System.currentTimeMillis();
 
-                        HashMap result = new HashMap<>();
 
-                        result.put("type", "1");
-                        result.put("writetime", makeTimeStamp(time));
-                        result.put("postid", postid);
-                        result.put("alramid", alramid);
-                        result.put("replyid", replyid);
+                        if(!userId.equals(reciverid)){
+                            HashMap result = new HashMap<>();
 
-                        reference11.setValue(result);
+                            result.put("type", "1");
+                            result.put("writetime", makeTimeStamp(time));
+                            result.put("postid", postid);
+                            result.put("alramid", alramid);
+                            result.put("replyid", replyid);
 
+                            reference11.setValue(result);
 
-                        reference10 = FirebaseDatabase.getInstance().getReference("UserList").child(reciverid);
-                        reference10.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                final Token item1 = snapshot.getValue(Token.class);
-                                Runnable runnable = new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        APIService apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
-                                        apiService.sendNotification(new NotificationData(new SendData(item.getContents(), item.getPostid(), "1", alramid, replyid), item1.getToken()))
-                                                .enqueue(new Callback<MyResponse>() {
-                                                    @Override
-                                                    public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                                                        if(response.code() == 200){
-                                                            if(response.body().success == 1){
-                                                                Log.e("Notification", "success");
+                            reference10 = FirebaseDatabase.getInstance().getReference("UserList").child(reciverid);
+                            reference10.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    final Token item1 = snapshot.getValue(Token.class);
+                                    Runnable runnable = new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            APIService apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
+                                            apiService.sendNotification(new NotificationData(new SendData(item.getContents(), item.getPostid(), "1", alramid, replyid), item1.getToken()))
+                                                    .enqueue(new Callback<MyResponse>() {
+                                                        @Override
+                                                        public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                                            if(response.code() == 200){
+                                                                if(response.body().success == 1){
+                                                                    Log.e("Notification", "success");
+                                                                }
                                                             }
                                                         }
-                                                    }
 
-                                                    @Override
-                                                    public void onFailure(Call<MyResponse> call, Throwable t) {
+                                                        @Override
+                                                        public void onFailure(Call<MyResponse> call, Throwable t) {
 
-                                                    }
-                                                });
-                                    }
-                                };
+                                                        }
+                                                    });
+                                        }
+                                    };
 
 
-                                if(!userId.equals(reciverid)){
                                     Thread tr = new Thread(runnable);
                                     tr.start();
 
-
                                 }
 
-                            }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
+                        }
 
-                            }
-                        });
+
+
+
                     }
 
                     @Override
@@ -1018,17 +1024,18 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for(DataSnapshot snapshot1 : snapshot.getChildren()){
-                                userlist.add(snapshot1.getValue().toString());
+                                Userlist2.add(snapshot1.getValue(Token.class));
                             }
 
-                            for(int i=0; i<userlist.size(); i++){
-                                reference7 = FirebaseDatabase.getInstance().getReference("Good").child(userlist.get(i)).child(item.getPostid());
+                            for(int i=0; i<Userlist2.size(); i++){
+
+                                reference7 = FirebaseDatabase.getInstance().getReference("Good").child(Userlist2.get(i).getUID()).child(item.getPostid());
                                 if(reference7 != null){
                                     reference7.removeValue();
                                 }
                             }
 
-                            postdelete(postid);
+                            alarmdelete(postid);
                         }
 
                         @Override
@@ -1038,7 +1045,7 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                     });
                 }
                 else{
-                    postdelete(postid);
+                    alarmdelete(postid);
                 }
             }
 
@@ -1048,6 +1055,55 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    AlramItem temp;
+    String s;
+
+    private void alarmdelete(final String postId){
+        reference6 = FirebaseDatabase.getInstance().getReference("UserList");
+        reference6.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                    Userlist3.add(snapshot1.getValue(Token.class));
+                }
+
+                for(int i = 0; i<Userlist3.size(); i++){
+                    s = Userlist3.get(i).getUID();
+                    reference13 = FirebaseDatabase.getInstance().getReference("Alram").child(Userlist3.get(i).getUID());
+                    reference13.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                                AlramItem item = snapshot1.getValue(AlramItem.class);
+                                if(item.getPostid().equals(postId)){
+                                   temp = item;
+                                   break;
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                    reference14 = FirebaseDatabase.getInstance().getReference("Alarm").child(s).child(temp.getReplyid());
+                    reference14.removeValue();
+                }
+
+
+
+                postdelete(postId);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private String makeTimeStamp(long in){
