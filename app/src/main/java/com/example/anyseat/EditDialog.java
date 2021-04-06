@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -101,7 +103,12 @@ public class EditDialog extends Dialog {
                     userInfo.Password = p;
                     userInfo.Grade = grade;
                     reference.child(Password).removeValue();
-                    user.updatePassword(p);
+                    user.updatePassword(p).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+
+                        }
+                    });
                     reference.child(p).setValue(userInfo);
                     SaveSharedPreference.setUserName(((MainActivity)MainActivity.context), "", "", false);
                     dismiss();
