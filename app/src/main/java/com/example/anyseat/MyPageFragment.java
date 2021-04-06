@@ -41,8 +41,10 @@ public class MyPageFragment extends Fragment {
     RecyclerView recyclerView1;
 
     private ArrayList<PostItem> list = new ArrayList<>();
-    private ArrayList<String> userlist = new ArrayList<>();
     private ArrayList<Token> Userlist2 = new ArrayList<>();
+    private ArrayList<Token> Userlist3 = new ArrayList<>();
+    private ArrayList<String> alramidlist = new ArrayList<>();
+    private ArrayList<String> alramuseridlist = new ArrayList<>();
 
     DatabaseReference reference;
     DatabaseReference reference2;
@@ -53,6 +55,13 @@ public class MyPageFragment extends Fragment {
     DatabaseReference de3_reference;
     DatabaseReference de4_reference;
     DatabaseReference de5_reference;
+    DatabaseReference de6_reference;
+    DatabaseReference de7_reference;
+    DatabaseReference de8_reference;
+    DatabaseReference de9_reference;
+    DatabaseReference de10_reference;
+
+
 
     FirebaseStorage storage;
 
@@ -156,6 +165,7 @@ public class MyPageFragment extends Fragment {
                         Intent intent = new Intent(view.getContext(), MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
+                        //
                     }
                 });
                 logout.setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -184,21 +194,14 @@ public class MyPageFragment extends Fragment {
                 signout.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        reference2.child(user.Password).removeValue();
+                        reference2.child(user.uid).removeValue();
                         SaveSharedPreference.setUserName(((MainActivity)MainActivity.context), "", "", false);
                         reference3.child(user.uid).removeValue();
                         for(int i=0;i<list.size();i++){
                             String postid = list.get(i).getPostid();
                             commentsdelete(postid);
                         }
-                        mAuth.getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    System.exit(0);
-                                }
-                            }
-                        });
+
                     }
                 });
                 signout.setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -216,21 +219,29 @@ public class MyPageFragment extends Fragment {
 
     private void postdelete(String postid){
         //String postid = list.get(position).getPostid();
-        reference2 = FirebaseDatabase.getInstance().getReference("Post").child(postid);
-        reference2.removeValue();
+        de1_reference = FirebaseDatabase.getInstance().getReference("Post").child(postid);
+        de1_reference.removeValue();
+        mAuth.getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    System.exit(0);
+                }
+            }
+        });
     }
 
     private void commentsdelete(final String postid){
         //final String postid = list.get(position).getPostid();
-        de1_reference = FirebaseDatabase.getInstance().getReference("Reply");
-        de1_reference.addListenerForSingleValueEvent(new ValueEventListener() {
+        de2_reference = FirebaseDatabase.getInstance().getReference("Reply");
+        de2_reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot snapshot1 : snapshot.getChildren()){
                     ReplyItem item1 = snapshot1.getValue(ReplyItem.class);
                     if(item1.getPostid().equals(postid)){
-                        de2_reference = FirebaseDatabase.getInstance().getReference("Reply").child(item1.getReplyid());
-                        de2_reference.removeValue();
+                        de4_reference = FirebaseDatabase.getInstance().getReference("Reply").child(item1.getReplyid());
+                        de4_reference.removeValue();
                     }
                 }
             }
@@ -245,8 +256,8 @@ public class MyPageFragment extends Fragment {
     }
 
     private void imagedelete(final String postid){
-        de3_reference = FirebaseDatabase.getInstance().getReference("Post").child(postid);
-        de3_reference.addListenerForSingleValueEvent(new ValueEventListener() {
+        de5_reference = FirebaseDatabase.getInstance().getReference("Post").child(postid);
+        de5_reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 PostItem item = snapshot.getValue(PostItem.class);
@@ -271,14 +282,16 @@ public class MyPageFragment extends Fragment {
     }
 
     private void gooddelete(final String postid){
-        de3_reference = FirebaseDatabase.getInstance().getReference("Post").child(postid);
-        de3_reference.addListenerForSingleValueEvent(new ValueEventListener() {
+        Userlist2.clear();
+
+        de6_reference = FirebaseDatabase.getInstance().getReference("Post").child(postid);
+        de6_reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 final PostItem item = snapshot.getValue(PostItem.class);
                 if(!item.getGoodcnt().equals("0")){
-                    de4_reference = FirebaseDatabase.getInstance().getReference("UserList");
-                    de4_reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    de7_reference = FirebaseDatabase.getInstance().getReference("UserList");
+                    de7_reference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for(DataSnapshot snapshot1 : snapshot.getChildren()){
@@ -286,13 +299,14 @@ public class MyPageFragment extends Fragment {
                             }
 
                             for(int i=0; i<Userlist2.size(); i++){
-                                de5_reference = FirebaseDatabase.getInstance().getReference("Good").child(Userlist2.get(i).getUID()).child(item.getPostid());
-                                if(de5_reference!=null) {
-                                    de5_reference.removeValue();
+
+                                de7_reference = FirebaseDatabase.getInstance().getReference("Good").child(Userlist2.get(i).getUID()).child(item.getPostid());
+                                if(de7_reference != null){
+                                    de7_reference.removeValue();
                                 }
                             }
 
-                            postdelete(postid);
+                            alarmdelete(postid);
                         }
 
                         @Override
@@ -302,7 +316,7 @@ public class MyPageFragment extends Fragment {
                     });
                 }
                 else{
-                    postdelete(postid);
+                    alarmdelete(postid);
                 }
             }
 
@@ -312,5 +326,74 @@ public class MyPageFragment extends Fragment {
             }
         });
 
+    }
+
+    //AlramItem temp;
+    //String s;
+
+    private void alarmdelete2(String postId, String a, String b){
+
+        for(int i=0;i<alramidlist.size();i++){
+            de8_reference = FirebaseDatabase.getInstance().getReference("Alram").child(alramuseridlist.get(i)).child(alramidlist.get(i));
+            de8_reference.removeValue();
+        }
+
+        postdelete(postId);
+    }
+
+    private void alarmdelete(final String postId){
+        Userlist3.clear();
+        alramidlist.clear();
+        alramuseridlist.clear();
+
+        de9_reference = FirebaseDatabase.getInstance().getReference("UserList");
+        de9_reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                    Userlist3.add(snapshot1.getValue(Token.class));
+                }
+
+                for(int i = 0; i<Userlist3.size(); i++){
+                    final int idx = i;
+                    de10_reference = FirebaseDatabase.getInstance().getReference("Alram").child(Userlist3.get(i).getUID());
+                    de10_reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                                AlramItem item = snapshot1.getValue(AlramItem.class);
+                                if(item.getPostid().equals(postId)){
+                                    alramidlist.add(item.getAlramid());
+                                    alramuseridlist.add(Userlist3.get(idx).getUID());
+
+
+
+                                    /*reference14 = FirebaseDatabase.getInstance().getReference("Alram").child(alramuseridlist.get(idx)).child(alramidlist.get(idx));
+                                    reference14.removeValue();*/
+                                }
+                            }
+                            //alarmdelete2(postId, alramidlist, alramuseridlist);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                }
+
+                if(Userlist3.size() == 0){
+                    postdelete(postId);
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }

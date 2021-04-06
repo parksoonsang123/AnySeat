@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String email = useremail.getText().toString();
+                email = email.trim();
                 String password = userpassword.getText().toString();
                 signIn(email, password);
             }
@@ -169,7 +170,6 @@ public class MainActivity extends AppCompatActivity {
                                             reference.setValue(result);
 
                                             Intent intent = new Intent(MainActivity.this, MainActivity2.class);
-                                            intent.putExtra("Password", password);
                                             startActivity(intent);
                                             finish();
                                         }

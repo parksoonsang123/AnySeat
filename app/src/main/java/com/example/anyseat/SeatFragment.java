@@ -81,13 +81,13 @@ public class SeatFragment extends Fragment {
     ImageView R72 ;
     ImageView R82 ;
 
-    String Password;
+    String uid;
 
 
     final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
-    public SeatFragment(String password) {
-        Password = password;
+    public SeatFragment(String uid) {
+        this.uid = uid;
     }
 
     @Override
@@ -407,7 +407,7 @@ public class SeatFragment extends Fragment {
         databaseReference.child("UserInfo").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                user = snapshot.child(Password).getValue(UserInfo.class);
+                user = snapshot.child(uid).getValue(UserInfo.class);
             }
 
             @Override
@@ -418,57 +418,57 @@ public class SeatFragment extends Fragment {
 
 
 
-        L11.setOnClickListener(new buttonlistener(getContext(), Password));
-        L21.setOnClickListener(new buttonlistener(getContext(), Password));
-        L31.setOnClickListener(new buttonlistener(getContext(), Password));
-        L41.setOnClickListener(new buttonlistener(getContext(), Password));
-        L51.setOnClickListener(new buttonlistener(getContext(), Password));
-        L61.setOnClickListener(new buttonlistener(getContext(), Password));
-        L71.setOnClickListener(new buttonlistener(getContext(), Password));
-        L81.setOnClickListener(new buttonlistener(getContext(), Password));
+        L11.setOnClickListener(new buttonlistener(getContext()));
+        L21.setOnClickListener(new buttonlistener(getContext()));
+        L31.setOnClickListener(new buttonlistener(getContext()));
+        L41.setOnClickListener(new buttonlistener(getContext()));
+        L51.setOnClickListener(new buttonlistener(getContext()));
+        L61.setOnClickListener(new buttonlistener(getContext()));
+        L71.setOnClickListener(new buttonlistener(getContext()));
+        L81.setOnClickListener(new buttonlistener(getContext()));
 
-        L12.setOnClickListener(new buttonlistener(getContext(), Password));
-        L22.setOnClickListener(new buttonlistener(getContext(), Password));
-        L32.setOnClickListener(new buttonlistener(getContext(), Password));
-        L42.setOnClickListener(new buttonlistener(getContext(), Password));
-        L52.setOnClickListener(new buttonlistener(getContext(), Password));
-        L62.setOnClickListener(new buttonlistener(getContext(), Password));
-        L72.setOnClickListener(new buttonlistener(getContext(), Password));
-        L82.setOnClickListener(new buttonlistener(getContext(), Password));
+        L12.setOnClickListener(new buttonlistener(getContext()));
+        L22.setOnClickListener(new buttonlistener(getContext()));
+        L32.setOnClickListener(new buttonlistener(getContext()));
+        L42.setOnClickListener(new buttonlistener(getContext()));
+        L52.setOnClickListener(new buttonlistener(getContext()));
+        L62.setOnClickListener(new buttonlistener(getContext()));
+        L72.setOnClickListener(new buttonlistener(getContext()));
+        L82.setOnClickListener(new buttonlistener(getContext()));
 
-        L13.setOnClickListener(new buttonlistener(getContext(), Password));
-        L23.setOnClickListener(new buttonlistener(getContext(), Password));
-        L33.setOnClickListener(new buttonlistener(getContext(), Password));
-        L43.setOnClickListener(new buttonlistener(getContext(), Password));
-        L53.setOnClickListener(new buttonlistener(getContext(), Password));
-        L63.setOnClickListener(new buttonlistener(getContext(), Password));
-        L73.setOnClickListener(new buttonlistener(getContext(), Password));
+        L13.setOnClickListener(new buttonlistener(getContext()));
+        L23.setOnClickListener(new buttonlistener(getContext()));
+        L33.setOnClickListener(new buttonlistener(getContext()));
+        L43.setOnClickListener(new buttonlistener(getContext()));
+        L53.setOnClickListener(new buttonlistener(getContext()));
+        L63.setOnClickListener(new buttonlistener(getContext()));
+        L73.setOnClickListener(new buttonlistener(getContext()));
 
-        L14.setOnClickListener(new buttonlistener(getContext(), Password));
-        L24.setOnClickListener(new buttonlistener(getContext(), Password));
-        L34.setOnClickListener(new buttonlistener(getContext(), Password));
-        L44.setOnClickListener(new buttonlistener(getContext(), Password));
-        L54.setOnClickListener(new buttonlistener(getContext(), Password));
-        L64.setOnClickListener(new buttonlistener(getContext(), Password));
-        L74.setOnClickListener(new buttonlistener(getContext(), Password));
+        L14.setOnClickListener(new buttonlistener(getContext()));
+        L24.setOnClickListener(new buttonlistener(getContext()));
+        L34.setOnClickListener(new buttonlistener(getContext()));
+        L44.setOnClickListener(new buttonlistener(getContext()));
+        L54.setOnClickListener(new buttonlistener(getContext()));
+        L64.setOnClickListener(new buttonlistener(getContext()));
+        L74.setOnClickListener(new buttonlistener(getContext()));
 
-        R11.setOnClickListener(new buttonlistener(getContext(), Password));
-        R21.setOnClickListener(new buttonlistener(getContext(), Password));
-        R31.setOnClickListener(new buttonlistener(getContext(), Password));
-        R41.setOnClickListener(new buttonlistener(getContext(), Password));
-        R51.setOnClickListener(new buttonlistener(getContext(), Password));
-        R61.setOnClickListener(new buttonlistener(getContext(), Password));
-        R71.setOnClickListener(new buttonlistener(getContext(), Password));
-        R81.setOnClickListener(new buttonlistener(getContext(), Password));
+        R11.setOnClickListener(new buttonlistener(getContext()));
+        R21.setOnClickListener(new buttonlistener(getContext()));
+        R31.setOnClickListener(new buttonlistener(getContext()));
+        R41.setOnClickListener(new buttonlistener(getContext()));
+        R51.setOnClickListener(new buttonlistener(getContext()));
+        R61.setOnClickListener(new buttonlistener(getContext()));
+        R71.setOnClickListener(new buttonlistener(getContext()));
+        R81.setOnClickListener(new buttonlistener(getContext()));
 
-        R12.setOnClickListener(new buttonlistener(getContext(), Password));
-        R22.setOnClickListener(new buttonlistener(getContext(), Password));
-        R32.setOnClickListener(new buttonlistener(getContext(), Password));
-        R42.setOnClickListener(new buttonlistener(getContext(), Password));
-        R52.setOnClickListener(new buttonlistener(getContext(), Password));
-        R62.setOnClickListener(new buttonlistener(getContext(), Password));
-        R72.setOnClickListener(new buttonlistener(getContext(), Password));
-        R82.setOnClickListener(new buttonlistener(getContext(), Password));
+        R12.setOnClickListener(new buttonlistener(getContext()));
+        R22.setOnClickListener(new buttonlistener(getContext()));
+        R32.setOnClickListener(new buttonlistener(getContext()));
+        R42.setOnClickListener(new buttonlistener(getContext()));
+        R52.setOnClickListener(new buttonlistener(getContext()));
+        R62.setOnClickListener(new buttonlistener(getContext()));
+        R72.setOnClickListener(new buttonlistener(getContext()));
+        R82.setOnClickListener(new buttonlistener(getContext()));
 
 
         String s = R11.getTag().toString();

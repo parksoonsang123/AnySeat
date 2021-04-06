@@ -30,7 +30,6 @@ public class MainActivity2 extends AppCompatActivity {
     SeatFragment seatFragment;
     AlramFragment alramFragment;
     MyPageFragment myPageFragment;
-    String Password;
     String alram;
     private TextView main_tv;
     public static Button main_btn;
@@ -60,32 +59,7 @@ public class MainActivity2 extends AppCompatActivity {
         main_tv = findViewById(R.id.main_text);
         main_btn = findViewById(R.id.main_btn);
 
-        Password = getIntent().getStringExtra("Password");
-        if(Password != null){
-            seatFragment = new SeatFragment(Password);
-        }
-        else{
-            reference1 = FirebaseDatabase.getInstance().getReference("UserInfo");
-            reference1.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for(DataSnapshot snapshot1 : snapshot.getChildren()){
-                        UserInfo item = snapshot1.getValue(UserInfo.class);
-                        if(item.uid.equals(userId)){
-                            Password = item.Password;
-                            break;
-                        }
-                    }
-
-                    seatFragment = new SeatFragment(Password);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        }
+        seatFragment = new SeatFragment(userId);
 
         reference2 = FirebaseDatabase.getInstance().getReference("Alram").child(userId);
         reference2.addValueEventListener(new ValueEventListener() {

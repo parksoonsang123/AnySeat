@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,21 +26,21 @@ public class buttonlistener implements View.OnClickListener {
     Context context;
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     UserInfo user;
-    String Password;
+    String uid;
     ArrayList<SeatInfo> seatlist = new ArrayList<>();
     final String[] tempuser = {new String()};
     DatabaseReference finalUserdata;
 
-    buttonlistener(Context context, String Password){
+    buttonlistener(Context context){
         this.context = context;
-        this.Password = Password;
-
-        DatabaseReference userdata = FirebaseDatabase.getInstance().getReference().child("UserInfo").child(Password);
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        uid = mAuth.getCurrentUser().getUid();
+        DatabaseReference userdata = FirebaseDatabase.getInstance().getReference().child("UserInfo").child(uid);
         userdata.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 user = snapshot.getValue(UserInfo.class);
-                finalUserdata= FirebaseDatabase.getInstance().getReference().child("UserInfo").child(user.Password);
+                finalUserdata= FirebaseDatabase.getInstance().getReference().child("UserInfo").child(user.uid);
             }
 
             @Override
@@ -178,7 +179,7 @@ public class buttonlistener implements View.OnClickListener {
             final String username = imageView.getTag().toString();
             int seatnum = imageView.getId();
             final String[] using = new String[1];
-            final DatabaseReference finalUserdata = FirebaseDatabase.getInstance().getReference().child("UserInfo").child(user.Password);
+            final DatabaseReference finalUserdata = FirebaseDatabase.getInstance().getReference().child("UserInfo").child(user.uid);
             if(user.using.equals("false")) {
                 if (username.equals("빈 자리")) {
                     writeNewUser(seat, view, seatnum, user.Name);

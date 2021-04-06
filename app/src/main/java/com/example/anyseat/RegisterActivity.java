@@ -99,7 +99,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void signUp(final String Name, final String Email, final String Password, final int Grade){
         String email = useremail.getText().toString();
-        String password = userpassword.getText().toString();
+        email = email.trim();
+        final String password = userpassword.getText().toString();
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -112,8 +113,14 @@ public class RegisterActivity extends AppCompatActivity {
                             writeNewUser(Name, Email, Password, Grade, uid);
                             //ui
                         } else {
+                            if(password.length() <= 5){
+                                Toast.makeText(RegisterActivity.this, "비밀번호는 6자리 이상이어야 입니다.", Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                Toast.makeText(RegisterActivity.this, "사용 중인 이메일입니다.", Toast.LENGTH_SHORT).show();
+                            }
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(RegisterActivity.this, "실패", Toast.LENGTH_SHORT).show();
+
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             //ui
                         }
@@ -126,7 +133,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void writeNewUser(String Name, String Email, String Password, int Grade, String uid) {
         UserInfo userInfo = new UserInfo(Name, Email, Password, Grade, uid);
 
-        mDatabase.child("UserInfo").child(Password).setValue(userInfo)
+        mDatabase.child("UserInfo").child(uid).setValue(userInfo)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

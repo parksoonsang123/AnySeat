@@ -1064,13 +1064,13 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
     //AlramItem temp;
     //String s;
 
-    private void alarmdelete2(){
+    private void alarmdelete2(String postId){
 
         for(int i=0;i<alramidlist.size();i++){
             reference14 = FirebaseDatabase.getInstance().getReference("Alram").child(alramuseridlist.get(i)).child(alramidlist.get(i));
             reference14.removeValue();
         }
-
+        postdelete(postId);
     }
 
     private void alarmdelete(final String postId){
@@ -1102,7 +1102,7 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                                     reference14.removeValue();*/
                                 }
                             }
-                            alarmdelete2();
+                            alarmdelete2(postId);
                         }
 
                         @Override
@@ -1115,9 +1115,9 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
 
 
 
-
-
-                postdelete(postId);
+                if(Userlist3.size() == 0){
+                    postdelete(postId);
+                }
             }
 
             @Override
