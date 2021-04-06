@@ -35,13 +35,13 @@ public class EditDialog extends Dialog {
 
     DatabaseReference reference;
 
-    String Password;
+    String uid;
     UserInfo userInfo;
     int grade;
-    public EditDialog(@NonNull Context context, String Password) {
+    public EditDialog(@NonNull Context context, String uid) {
         super(context);
         this.context = context;
-        this.Password = Password;
+        this.uid = uid;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class EditDialog extends Dialog {
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                userInfo = snapshot.child(Password).getValue(UserInfo.class);
+                userInfo = snapshot.child(uid).getValue(UserInfo.class);
             }
 
             @Override
@@ -103,22 +103,25 @@ public class EditDialog extends Dialog {
                     Toast.makeText(context, "변경할 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    if(Password.equals(p)&&p.equals(c)){
-                        Toast.makeText(context, "전 비밀번호와 동일합니다.", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        if (p.equals(c)) {
-                            userInfo.Password = p;
-                            userInfo.Grade = grade;
-                            reference.child(p).setValue(userInfo);
-                            reference.child(Password).removeValue();
-                            user.updatePassword(p);
-                            SaveSharedPreference.setUserName(((MainActivity) MainActivity.context), "", "", false);
-                            dismiss();
-                        } else {
-                            Toast.makeText(context, "입력하신 비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+                    if(p.equals(c)){
+                        if(p.length()<6) Toast.makeText(context, "비밀번호는 6자리 이상이여야 합니다.", Toast.LENGTH_SHORT).show();
+                        else {
+                            if (userInfo.Password.equals(p))
+                                Toast.makeText(context, "전 비밀번호와 동일합니다.", Toast.LENGTH_SHORT).show();
+                            else {
+                                userInfo.Password = p;
+                                userInfo.Grade = grade;
+                                reference.child(uid).setValue(userInfo);
+                                user.updatePassword(p);
+                                SaveSharedPreference.setUserName(((MainActivity) MainActivity.context), "", "", false);
+                                dismiss();
+                            }
                         }
                     }
+                    else {
+                        Toast.makeText(context, "입력하신 비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
             }
         });

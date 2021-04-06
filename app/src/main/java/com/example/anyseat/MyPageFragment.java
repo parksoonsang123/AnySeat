@@ -49,6 +49,8 @@ public class MyPageFragment extends Fragment {
     DatabaseReference reference;
     DatabaseReference reference2;
     DatabaseReference reference3;
+    DatabaseReference reference4;
+    DatabaseReference reference5;
 
     DatabaseReference de1_reference;
     DatabaseReference de2_reference;
@@ -147,7 +149,7 @@ public class MyPageFragment extends Fragment {
         EditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditDialog editDialog = new EditDialog(view.getContext(), user.Password);
+                EditDialog editDialog = new EditDialog(view.getContext(), userId);
                 editDialog.show();
             }
         });
@@ -196,10 +198,35 @@ public class MyPageFragment extends Fragment {
                 signout.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        for(int i=0;i<list.size();i++){
-                            flag = i;
-                            String postid = list.get(i).getPostid();
-                            commentsdelete(postid);
+
+                        if(list.size()==0){
+                            if(!user.using.equals("false")) {
+                                reference4 = FirebaseDatabase.getInstance().getReference("SeatInfo").child(user.using);
+                                reference4.child("status").setValue("off");
+                                reference4.child("statusnum").setValue(0);
+                                reference4.child("user").setValue("빈 자리");
+                                reference5 = FirebaseDatabase.getInstance().getReference("UserInfo").child(userId);
+                                reference5.child("using").setValue("false");
+                            }
+
+                            reference2.child(user.uid).removeValue();
+                            SaveSharedPreference.setUserName(((MainActivity)MainActivity.context), "", "", false);
+                            reference3.child(user.uid).removeValue();
+                            mAuth.getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        System.exit(0);
+                                    }
+                                }
+                            });
+                        }
+                        else {
+                            for (int i = 0; i < list.size(); i++) {
+                                flag = i;
+                                String postid = list.get(i).getPostid();
+                                commentsdelete(postid);
+                            }
                         }
 
                     }
@@ -223,6 +250,16 @@ public class MyPageFragment extends Fragment {
         de1_reference.removeValue();
 
         if(flag == list.size()-1){
+
+            if(!user.using.equals("false")) {
+                reference4 = FirebaseDatabase.getInstance().getReference("SeatInfo").child(user.using);
+                reference4.child("status").setValue("off");
+                reference4.child("statusnum").setValue(0);
+                reference4.child("user").setValue("빈 자리");
+                reference5 = FirebaseDatabase.getInstance().getReference("UserInfo").child(userId);
+                reference5.child("using").setValue("false");
+            }
+
             reference2.child(user.uid).removeValue();
             SaveSharedPreference.setUserName(((MainActivity)MainActivity.context), "", "", false);
             reference3.child(user.uid).removeValue();

@@ -194,7 +194,7 @@ public class HomeFragment extends Fragment {
                                                     reference4.child("status").setValue("off");
                                                     reference4.child("statusnum").setValue(0);
                                                     reference4.child("user").setValue("빈 자리");
-                                                    reference5 = FirebaseDatabase.getInstance().getReference("UserInfo").child(pw);
+                                                    reference5 = FirebaseDatabase.getInstance().getReference("UserInfo").child(userId);
                                                     reference5.child("using").setValue("false");
                                                     status_img.setImageResource(0);
                                                     status_txt.setText("사용중이 아닙니다.");
