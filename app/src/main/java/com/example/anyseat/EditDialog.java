@@ -99,22 +99,26 @@ public class EditDialog extends Dialog {
             public void onClick(View v) {
                 String p = Pass.getText().toString();
                 String c = Pass_Conf.getText().toString();
-                if(p.equals(c)){
-                    userInfo.Password = p;
-                    userInfo.Grade = grade;
-                    reference.child(Password).removeValue();
-                    user.updatePassword(p).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-
-                        }
-                    });
-                    reference.child(p).setValue(userInfo);
-                    SaveSharedPreference.setUserName(((MainActivity)MainActivity.context), "", "", false);
-                    dismiss();
+                if(p.equals("")||c.equals("")) {
+                    Toast.makeText(context, "변경할 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }
-                else{
-                    Toast.makeText(context, "입력하신 비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+                else {
+                    if (p.equals(c)) {
+                        userInfo.Password = p;
+                        userInfo.Grade = grade;
+                        reference.child(p).setValue(userInfo);
+                        reference.child(Password).removeValue();
+                        user.updatePassword(p).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+
+                            }
+                        });
+                        SaveSharedPreference.setUserName(((MainActivity) MainActivity.context), "", "", false);
+                        dismiss();
+                    } else {
+                        Toast.makeText(context, "입력하신 비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
