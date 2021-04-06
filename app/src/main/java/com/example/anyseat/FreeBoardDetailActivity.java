@@ -65,6 +65,8 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
     private ArrayList<FreeBoardDetailItem> list = new ArrayList<>();
     private ArrayList<Token> Userlist2 = new ArrayList<>();
     private ArrayList<Token> Userlist3 = new ArrayList<>();
+    private ArrayList<String> alramidlist = new ArrayList<>();
+    private ArrayList<String> alramuseridlist = new ArrayList<>();
 
     RecyclerView recyclerView;
     FreeBoardDetailAdapter adapter;
@@ -1013,6 +1015,8 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
     }
 
     private void gooddelete(final String postid){
+        Userlist2.clear();
+
         reference3 = FirebaseDatabase.getInstance().getReference("Post").child(postid);
         reference3.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -1057,10 +1061,23 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
 
     }
 
-    AlramItem temp;
-    String s;
+    //AlramItem temp;
+    //String s;
+
+    private void alarmdelete2(){
+
+        for(int i=0;i<alramidlist.size();i++){
+            reference14 = FirebaseDatabase.getInstance().getReference("Alram").child(alramuseridlist.get(i)).child(alramidlist.get(i));
+            reference14.removeValue();
+        }
+
+    }
 
     private void alarmdelete(final String postId){
+        Userlist3.clear();
+        alramidlist.clear();
+        alramuseridlist.clear();
+
         reference6 = FirebaseDatabase.getInstance().getReference("UserList");
         reference6.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -1070,7 +1087,7 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                 }
 
                 for(int i = 0; i<Userlist3.size(); i++){
-                    s = Userlist3.get(i).getUID();
+                    final int idx = i;
                     reference13 = FirebaseDatabase.getInstance().getReference("Alram").child(Userlist3.get(i).getUID());
                     reference13.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -1078,10 +1095,14 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                             for(DataSnapshot snapshot1 : snapshot.getChildren()){
                                 AlramItem item = snapshot1.getValue(AlramItem.class);
                                 if(item.getPostid().equals(postId)){
-                                   temp = item;
-                                   break;
+                                    alramidlist.add(item.getAlramid());
+                                    alramuseridlist.add(Userlist3.get(idx).getUID());
+
+                                    /*reference14 = FirebaseDatabase.getInstance().getReference("Alram").child(alramuseridlist.get(idx)).child(alramidlist.get(idx));
+                                    reference14.removeValue();*/
                                 }
                             }
+                            alarmdelete2();
                         }
 
                         @Override
@@ -1090,9 +1111,9 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                         }
                     });
 
-                    reference14 = FirebaseDatabase.getInstance().getReference("Alarm").child(s).child(temp.getReplyid());
-                    reference14.removeValue();
                 }
+
+
 
 
 
