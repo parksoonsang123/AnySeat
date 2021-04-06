@@ -33,6 +33,7 @@ public class AlramActivity extends AppCompatActivity {
     String userId;
 
     DatabaseReference reference;
+    DatabaseReference reference2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,23 @@ public class AlramActivity extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                reference2 = FirebaseDatabase.getInstance().getReference("Alram").child(userId);
+                reference2.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()){
+                            MainActivity2.main_btn.setBackgroundResource(R.drawable.alram4);
+                        }
+                        else{
+                            MainActivity2.main_btn.setBackgroundResource(R.drawable.ic_baseline_notifications_24);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
                 finish();
             }
         });

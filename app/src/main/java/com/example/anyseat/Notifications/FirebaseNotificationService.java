@@ -52,15 +52,20 @@ public class FirebaseNotificationService extends FirebaseMessagingService {
 
             if(type.equals("1")){
                 title = "게시글에 댓글이 달렸습니다.\n";
-                Intent intent = new Intent(this, FreeBoardDetailActivity.class);
+                Intent intent = new Intent(getBaseContext(), FreeBoardDetailActivity.class);
                 intent.putExtra("postid", postid);
                 intent.putExtra("alram", "1");
                 intent.putExtra("alramid", alramid);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.setAction(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                /*intent.setAction(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);*/
 
                 //MainActivity2.alarmflag = 1;
 
-                PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(),0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
                 String channelId = "mychannel";
 
@@ -80,17 +85,19 @@ public class FirebaseNotificationService extends FirebaseMessagingService {
                     notificationManger.createNotificationChannel(channel);
                 }
                 notificationManger.notify(0,notificationBuilder.build());
-
             }
             else {
                 title = "새로운 공지사항이 있습니다.\n";
-                Intent intent = new Intent(this, NoticeDetailActivity.class);
+                Intent intent = new Intent(getBaseContext(), NoticeDetailActivity.class);
                 intent.putExtra("postid", postid);
                 intent.putExtra("alram", "1");
                 intent.putExtra("alramid", alramid);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.setAction(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-                PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT);
+                PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(),0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
                 String channelId = "mychannel";
 
@@ -110,7 +117,6 @@ public class FirebaseNotificationService extends FirebaseMessagingService {
                     notificationManger.createNotificationChannel(channel);
                 }
                 notificationManger.notify(0,notificationBuilder.build());
-
             }
 
         }

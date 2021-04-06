@@ -2,6 +2,7 @@ package com.example.anyseat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -32,12 +33,20 @@ public class MainActivity2 extends AppCompatActivity {
     String Password;
     String alram;
     private TextView main_tv;
-    Button main_btn;
+    public static Button main_btn;
 
     DatabaseReference reference1;
+    DatabaseReference reference2;
+    DatabaseReference reference3;
+    DatabaseReference reference4;
+    DatabaseReference reference5;
+    DatabaseReference reference6;
+
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     String userId;
+
+    int flag = -1;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +87,24 @@ public class MainActivity2 extends AppCompatActivity {
             });
         }
 
+        reference2 = FirebaseDatabase.getInstance().getReference("Alram").child(userId);
+        reference2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    flag = 1;
+                }
+                else{
+                    flag = -1;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         crewFragment = new CrewFragment();
         boardFragment = new BoardFragment();
         studyFragment = new StudyFragment();
@@ -91,6 +118,7 @@ public class MainActivity2 extends AppCompatActivity {
             main_tv.setText("게시판");
             main_btn.setVisibility(View.VISIBLE);
             main_btn.setBackgroundResource(R.drawable.ic_baseline_search_24);
+
             main_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -114,7 +142,24 @@ public class MainActivity2 extends AppCompatActivity {
                                     .commitAllowingStateLoss();
 
                             main_btn.setVisibility(View.VISIBLE);
-                            main_btn.setBackgroundResource(R.drawable.ic_baseline_notifications_24);
+                            //main_btn.setBackgroundResource(R.drawable.ic_baseline_notifications_24);
+                            reference6 = FirebaseDatabase.getInstance().getReference("Alram").child(userId);
+                            reference6.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if(snapshot.exists()){
+                                        main_btn.setBackgroundResource(R.drawable.alram4);
+                                    }
+                                    else{
+                                        main_btn.setBackgroundResource(R.drawable.ic_baseline_notifications_24);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                             main_btn.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -175,7 +220,24 @@ public class MainActivity2 extends AppCompatActivity {
         else if(alram != null && alram.equals("2")){
             main_tv.setText("홈");
             main_btn.setVisibility(View.VISIBLE);
-            main_btn.setBackgroundResource(R.drawable.ic_baseline_notifications_24);
+            //main_btn.setBackgroundResource(R.drawable.ic_baseline_notifications_24);
+            reference5 = FirebaseDatabase.getInstance().getReference("Alram").child(userId);
+            reference5.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+                        main_btn.setBackgroundResource(R.drawable.alram4);
+                    }
+                    else{
+                        main_btn.setBackgroundResource(R.drawable.ic_baseline_notifications_24);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
             main_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -199,7 +261,24 @@ public class MainActivity2 extends AppCompatActivity {
                                     .commitAllowingStateLoss();
 
                             main_btn.setVisibility(View.VISIBLE);
-                            main_btn.setBackgroundResource(R.drawable.ic_baseline_notifications_24);
+                            //main_btn.setBackgroundResource(R.drawable.ic_baseline_notifications_24);
+                            reference4 = FirebaseDatabase.getInstance().getReference("Alram").child(userId);
+                            reference4.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if(snapshot.exists()){
+                                        main_btn.setBackgroundResource(R.drawable.alram4);
+                                    }
+                                    else{
+                                        main_btn.setBackgroundResource(R.drawable.ic_baseline_notifications_24);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                             main_btn.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -258,9 +337,27 @@ public class MainActivity2 extends AppCompatActivity {
             });
         }
         else{
+            ///////////////
             main_tv.setText("홈");
             main_btn.setVisibility(View.VISIBLE);
-            main_btn.setBackgroundResource(R.drawable.ic_baseline_notifications_24);
+            //main_btn.setBackgroundResource(R.drawable.ic_baseline_notifications_24);
+            reference3 = FirebaseDatabase.getInstance().getReference("Alram").child(userId);
+            reference3.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+                        main_btn.setBackgroundResource(R.drawable.alram4);
+                    }
+                    else{
+                        main_btn.setBackgroundResource(R.drawable.ic_baseline_notifications_24);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
             main_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -271,6 +368,7 @@ public class MainActivity2 extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().
                     replace(R.id.main_frame_layout, homeFragment)
                     .commitAllowingStateLoss();
+
 
             bottomNavigationView.setSelectedItemId(R.id.tab0);
             bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -284,7 +382,32 @@ public class MainActivity2 extends AppCompatActivity {
                                     .commitAllowingStateLoss();
 
                             main_btn.setVisibility(View.VISIBLE);
-                            main_btn.setBackgroundResource(R.drawable.ic_baseline_notifications_24);
+                            //main_btn.setBackgroundResource(R.drawable.ic_baseline_notifications_24);
+                            /*if(flag == 1){
+                                main_btn.setBackgroundResource(R.drawable.alram4);
+                            }
+                            else{
+                                main_btn.setBackgroundResource(R.drawable.ic_baseline_notifications_24);
+                            }*/
+                            ///////////
+                            reference2 = FirebaseDatabase.getInstance().getReference("Alram").child(userId);
+                            reference2.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if(snapshot.exists()){
+                                        main_btn.setBackgroundResource(R.drawable.alram4);
+                                    }
+                                    else{
+                                        main_btn.setBackgroundResource(R.drawable.ic_baseline_notifications_24);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+
                             main_btn.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {

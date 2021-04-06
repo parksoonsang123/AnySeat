@@ -52,6 +52,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -60,7 +61,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="15dp"
             android:text="지도교수\n 최두현"
             android:background="@drawable/jojikbtn"
             android:textSize="10dp"
@@ -72,7 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="20dp"
             android:text="조교\n 오은희"
             android:background="@drawable/jojikbtn"
             android:textColor="#000000"
@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="25dp">
 
             <Button
                 android:id="@+id/President_Student"
@@ -114,13 +114,89 @@
 
         </LinearLayout>
 
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_gravity="center"
             android:layout_marginHorizontal="4dp"
-            android:layout_marginTop="25dp">
+            android:layout_marginTop="30dp">
+
+            <Button
+                android:id="@+id/one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="2.5dp"
+                android:text="1학년 대표\n 박태성"
+                android:background="@drawable/jojikbtn"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="10dp"/>
+
+            <Button
+                android:id="@+id/two"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="2.5dp"
+                android:layout_marginRight="2.5dp"
+                android:background="@drawable/jojikbtn"
+                android:text="2학년 대표\n 박재우"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="10dp"/>
+
+            <Button
+                android:id="@+id/three"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="2.5dp"
+                android:layout_marginRight="2.5dp"
+                android:text="3학년 대표\n 조영헌"
+                android:background="@drawable/jojikbtn"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="10dp"/>
+
+            <Button
+                android:id="@+id/four"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="2.5dp"
+                android:layout_marginRight="2.5dp"
+                android:text="4학년 대표\n 이소윤"
+                android:background="@drawable/jojikbtn"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="10dp"/>
+
+            <Button
+                android:id="@+id/girl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="2.5dp"
+                android:layout_marginRight="2.5dp"
+                android:text="여학우 대표\n 성자민"
+                android:background="@drawable/jojikbtn"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="10dp"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="4dp"
+            android:layout_marginTop="30dp">
 
             <Button
                 android:id="@+id/Manager_Student"
@@ -188,10 +264,89 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginTop="30dp"
+        android:layout_marginHorizontal="10dp"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/call"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="053 - 950 - 6571"
+                android:layout_gravity="center"
+                android:textColor="#000000"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/location"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="대구광역시 북구 대학로 80\n경북대학교 IT대학 2호관 303호"
+                android:layout_gravity="center"
+                android:textColor="#000000"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/officehour"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="평일 : 09:00 ~ 18:00\n점심시간 12:00 ~ 13:00"
+                android:layout_gravity="center"
+                android:textColor="#000000"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
     <View
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="3"/>
+        android:layout_weight="1"/>
 
 
 </LinearLayout>

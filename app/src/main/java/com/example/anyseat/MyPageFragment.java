@@ -133,10 +133,27 @@ public class MyPageFragment extends Fragment {
         LogOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SaveSharedPreference.setUserName(((MainActivity)MainActivity.context), "", "", false);
-                Intent intent = new Intent(view.getContext(), MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                AlertDialog.Builder logout = new AlertDialog.Builder(view.getContext(), R.style.MyDialogTheme);
+                logout.setTitle("로그아웃");
+                logout.setMessage("로그아웃 하시겠습니까?");
+                logout.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SaveSharedPreference.setUserName(((MainActivity)MainActivity.context), "", "", false);
+                        Intent intent = new Intent(view.getContext(), MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                });
+                logout.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                logout.show();
+
+
             }
         });
 
@@ -145,10 +162,10 @@ public class MyPageFragment extends Fragment {
         SignOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder signout = new AlertDialog.Builder(view.getContext());
-                signout.setTitle("회원탈퇴");
-                signout.setMessage("한번 회원 탈퇴한 계정의 정보는 개발자도 복구시켜주지 않습니다. 정말 삭제하실건가요....?");
-                signout.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                AlertDialog.Builder signout = new AlertDialog.Builder(view.getContext(), R.style.MyDialogTheme);
+                signout.setTitle("회원 탈퇴");
+                signout.setMessage("탈퇴 하시겠습니까..?");
+                signout.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         reference2.child(user.Password).removeValue();
@@ -163,7 +180,7 @@ public class MyPageFragment extends Fragment {
                         });
                     }
                 });
-                signout.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                signout.setNegativeButton("취소", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
