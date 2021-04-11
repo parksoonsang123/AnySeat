@@ -82,6 +82,8 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
     DatabaseReference reference12;
     DatabaseReference reference13;
     DatabaseReference reference14;
+    DatabaseReference reference15;
+    DatabaseReference reference16;
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     String userId;
@@ -144,24 +146,51 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
         fbdremakebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = getIntent();
+                final String postid = intent.getStringExtra("id");
+                final String postid2 = intent.getStringExtra("postid");
 
-                reference8 = FirebaseDatabase.getInstance().getReference("Post").child(postid);
-                reference8.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        PostItem item = snapshot.getValue(PostItem.class);
-                        Intent intent1 = new Intent(FreeBoardDetailActivity.this, WriteBoardActivity.class);
-                        intent1.putExtra("postid", postid);
-                        intent1.putExtra("goodcnt", item.getGoodcnt());
-                        intent1.putExtra("commentcnt", item.getCommentcnt());
-                        startActivity(intent1);
-                        finish();
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                if(postid == null){
+                    reference8 = FirebaseDatabase.getInstance().getReference("Post").child(postid2);
+                    reference8.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            PostItem item = snapshot.getValue(PostItem.class);
+                            Intent intent1 = new Intent(FreeBoardDetailActivity.this, WriteBoardActivity.class);
+                            intent1.putExtra("postid", postid2);
+                            intent1.putExtra("goodcnt", item.getGoodcnt());
+                            intent1.putExtra("commentcnt", item.getCommentcnt());
+                            startActivity(intent1);
+                            finish();
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
+                        }
+                    });
+                }
+                else{
+                    reference8 = FirebaseDatabase.getInstance().getReference("Post").child(postid);
+                    reference8.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            PostItem item = snapshot.getValue(PostItem.class);
+                            Intent intent1 = new Intent(FreeBoardDetailActivity.this, WriteBoardActivity.class);
+                            intent1.putExtra("postid", postid);
+                            intent1.putExtra("goodcnt", item.getGoodcnt());
+                            intent1.putExtra("commentcnt", item.getCommentcnt());
+                            startActivity(intent1);
+                            finish();
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+
+
+
             }
         });
 
@@ -176,8 +205,18 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                commentsdelete(postid);
-                                finish();
+                                Intent intent = getIntent();
+                                final String postid = intent.getStringExtra("id");
+                                final String postid2 = intent.getStringExtra("postid");
+                                if(postid == null){
+                                    commentsdelete(postid2);
+                                    finish();
+                                }
+                                else{
+                                    commentsdelete(postid);
+                                    finish();
+                                }
+
                             }
                         });
                 builder.setNegativeButton("취소",
@@ -206,110 +245,219 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = getIntent();
                 final String postid = intent.getStringExtra("id");
+                final String postid2 = intent.getStringExtra("postid");
                 reference = FirebaseDatabase.getInstance().getReference("Reply").push();
                 final String replyid = reference.getKey();
                 long time = System.currentTimeMillis();
 
-                HashMap result = new HashMap<>();
+                if(postid == null){
+                    HashMap result = new HashMap<>();
 
-                result.put("contents", fbdedit.getText().toString());
-                result.put("writetime", makeTimeStamp(time));
-                result.put("postid", postid);
-                result.put("replyid", replyid);
-                result.put("userid", userId);
+                    result.put("contents", fbdedit.getText().toString());
+                    result.put("writetime", makeTimeStamp(time));
 
-                reference.setValue(result);
+                    result.put("postid", postid2);
+                    result.put("replyid", replyid);
+                    result.put("userid", userId);
 
-                //업데이트
-                list.add(new FreeBoardDetailItem(fbdedit.getText().toString(), makeTimeStamp(time), postid, replyid, userId, 2));
+                    reference.setValue(result);
 
-                adapter.notifyItemInserted(list.size()-1);
+                    //업데이트
+                    list.add(new FreeBoardDetailItem(fbdedit.getText().toString(), makeTimeStamp(time), postid2, replyid, userId, 2));
 
-                //댓글 수 1 증가
-                commentplus(postid);
+                    adapter.notifyItemInserted(list.size()-1);
 
-                //버튼 클릭 후 edittext 초기화 & 키보드 내리기
-                fbdedit.setText("");
-                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(fbdedit.getWindowToken(),0);
-
-                //댓글 시 알림
-
-                reference9 = FirebaseDatabase.getInstance().getReference("Post").child(postid);
-                reference9.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        final PostItem item = snapshot.getValue(PostItem.class);
-                        final String reciverid = item.getUserid();
-
-                        reference11 = FirebaseDatabase.getInstance().getReference("Alram").child(reciverid).push();
-                        final String alramid = reference11.getKey();
-
-                        long time = System.currentTimeMillis();
+                    //댓글 수 1 증가
+                    commentplus(postid2);
 
 
-                        if(!userId.equals(reciverid)){
-                            HashMap result = new HashMap<>();
+                    //버튼 클릭 후 edittext 초기화 & 키보드 내리기
+                    fbdedit.setText("");
+                    InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(fbdedit.getWindowToken(),0);
 
-                            result.put("type", "1");
-                            result.put("writetime", makeTimeStamp(time));
-                            result.put("postid", postid);
-                            result.put("alramid", alramid);
-                            result.put("replyid", replyid);
+                    //댓글 시 알림
+                    reference9 = FirebaseDatabase.getInstance().getReference("Post").child(postid2);
+                    reference9.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            final PostItem item = snapshot.getValue(PostItem.class);
+                            final String reciverid = item.getUserid();
 
-                            reference11.setValue(result);
+                            reference11 = FirebaseDatabase.getInstance().getReference("Alram").child(reciverid).push();
+                            final String alramid = reference11.getKey();
 
-                            reference10 = FirebaseDatabase.getInstance().getReference("UserList").child(reciverid);
-                            reference10.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    final Token item1 = snapshot.getValue(Token.class);
-                                    Runnable runnable = new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            APIService apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
-                                            apiService.sendNotification(new NotificationData(new SendData(item.getContents(), item.getPostid(), "1", alramid, replyid), item1.getToken()))
-                                                    .enqueue(new Callback<MyResponse>() {
-                                                        @Override
-                                                        public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                                                            if(response.code() == 200){
-                                                                if(response.body().success == 1){
-                                                                    Log.e("Notification", "success");
+                            long time = System.currentTimeMillis();
+
+
+                            if(!userId.equals(reciverid)){
+                                HashMap result = new HashMap<>();
+
+                                result.put("type", "1");
+                                result.put("writetime", makeTimeStamp(time));
+                                result.put("postid", postid2);
+                                result.put("alramid", alramid);
+                                result.put("replyid", replyid);
+
+                                reference11.setValue(result);
+
+                                reference10 = FirebaseDatabase.getInstance().getReference("UserList").child(reciverid);
+                                reference10.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        final Token item1 = snapshot.getValue(Token.class);
+                                        Runnable runnable = new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                APIService apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
+                                                apiService.sendNotification(new NotificationData(new SendData(item.getContents(), item.getPostid(), "1", alramid, replyid), item1.getToken()))
+                                                        .enqueue(new Callback<MyResponse>() {
+                                                            @Override
+                                                            public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                                                if(response.code() == 200){
+                                                                    if(response.body().success == 1){
+                                                                        Log.e("Notification", "success");
+                                                                    }
                                                                 }
                                                             }
-                                                        }
 
-                                                        @Override
-                                                        public void onFailure(Call<MyResponse> call, Throwable t) {
+                                                            @Override
+                                                            public void onFailure(Call<MyResponse> call, Throwable t) {
 
-                                                        }
-                                                    });
-                                        }
-                                    };
+                                                            }
+                                                        });
+                                            }
+                                        };
 
 
-                                    Thread tr = new Thread(runnable);
-                                    tr.start();
+                                        Thread tr = new Thread(runnable);
+                                        tr.start();
 
-                                }
+                                    }
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
 
-                                }
-                            });
+                                    }
+                                });
+                            }
+
+
+
+
                         }
 
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+                else{
+                    HashMap result = new HashMap<>();
+
+                    result.put("contents", fbdedit.getText().toString());
+                    result.put("writetime", makeTimeStamp(time));
+
+                    result.put("postid", postid);
+                    result.put("replyid", replyid);
+                    result.put("userid", userId);
+
+                    reference.setValue(result);
+
+                    //업데이트
+                    list.add(new FreeBoardDetailItem(fbdedit.getText().toString(), makeTimeStamp(time), postid, replyid, userId, 2));
+
+                    adapter.notifyItemInserted(list.size()-1);
+
+                    //댓글 수 1 증가
+
+                    commentplus(postid);
+
+                    //버튼 클릭 후 edittext 초기화 & 키보드 내리기
+                    fbdedit.setText("");
+                    InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(fbdedit.getWindowToken(),0);
+
+                    //댓글 시 알림
+                    reference9 = FirebaseDatabase.getInstance().getReference("Post").child(postid);
+                    reference9.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            final PostItem item = snapshot.getValue(PostItem.class);
+                            final String reciverid = item.getUserid();
+
+                            reference11 = FirebaseDatabase.getInstance().getReference("Alram").child(reciverid).push();
+                            final String alramid = reference11.getKey();
+
+                            long time = System.currentTimeMillis();
+
+
+                            if(!userId.equals(reciverid)){
+                                HashMap result = new HashMap<>();
+
+                                result.put("type", "1");
+                                result.put("writetime", makeTimeStamp(time));
+                                result.put("postid", postid);
+                                result.put("alramid", alramid);
+                                result.put("replyid", replyid);
+
+                                reference11.setValue(result);
+
+                                reference10 = FirebaseDatabase.getInstance().getReference("UserList").child(reciverid);
+                                reference10.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        final Token item1 = snapshot.getValue(Token.class);
+                                        Runnable runnable = new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                APIService apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
+                                                apiService.sendNotification(new NotificationData(new SendData(item.getContents(), item.getPostid(), "1", alramid, replyid), item1.getToken()))
+                                                        .enqueue(new Callback<MyResponse>() {
+                                                            @Override
+                                                            public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                                                if(response.code() == 200){
+                                                                    if(response.body().success == 1){
+                                                                        Log.e("Notification", "success");
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            @Override
+                                                            public void onFailure(Call<MyResponse> call, Throwable t) {
+
+                                                            }
+                                                        });
+                                            }
+                                        };
+
+
+                                        Thread tr = new Thread(runnable);
+                                        tr.start();
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                            }
 
 
 
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+
+
             }
         });
 
@@ -378,7 +526,13 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                                         public void onGoodClick(View v, int position, ImageView btn) {
                                             Intent intent = getIntent();
                                             String postId = intent.getStringExtra("id");
-                                            goodplus(postId, userId, btn);
+                                            String postId2 = intent.getStringExtra("postid");
+                                            if(postId == null){
+                                                goodplus(postId2, userId, btn);
+                                            }
+                                            else{
+                                                goodplus(postId, userId, btn);
+                                            }
                                         }
                                     });
                                     adapter.setOnDeleteClickListener(new FreeBoardDetailAdapter.OnDeleteClickListner() {
@@ -488,7 +642,13 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                                                 public void onGoodClick(View v, int position, ImageView btn) {
                                                     Intent intent = getIntent();
                                                     String postId = intent.getStringExtra("id");
-                                                    goodplus(postId, userId, btn);
+                                                    String postId2 = intent.getStringExtra("postid");
+                                                    if(postId == null){
+                                                        goodplus(postId2, userId, btn);
+                                                    }
+                                                    else{
+                                                        goodplus(postId, userId, btn);
+                                                    }
                                                 }
                                             });
                                             adapter.setOnDeleteClickListener(new FreeBoardDetailAdapter.OnDeleteClickListner() {
@@ -620,7 +780,13 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                                     public void onGoodClick(View v, int position, ImageView btn) {
                                         Intent intent = getIntent();
                                         String postId = intent.getStringExtra("id");
-                                        goodplus(postId, userId, btn);
+                                        String postId2 = intent.getStringExtra("postid");
+                                        if(postId == null){
+                                            goodplus(postId2, userId, btn);
+                                        }
+                                        else{
+                                            goodplus(postId, userId, btn);
+                                        }
                                     }
                                 });
                                 adapter.setOnDeleteClickListener(new FreeBoardDetailAdapter.OnDeleteClickListner() {
@@ -730,7 +896,13 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                                             public void onGoodClick(View v, int position, ImageView btn) {
                                                 Intent intent = getIntent();
                                                 String postId = intent.getStringExtra("id");
-                                                goodplus(postId, userId, btn);
+                                                String postId2 = intent.getStringExtra("postid");
+                                                if(postId == null){
+                                                    goodplus(postId2, userId, btn);
+                                                }
+                                                else{
+                                                    goodplus(postId, userId, btn);
+                                                }
                                             }
                                         });
                                         adapter.setOnDeleteClickListener(new FreeBoardDetailAdapter.OnDeleteClickListner() {
@@ -852,15 +1024,15 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
 
     public void goodplus(final String postId, final String userId, ImageView btn){
 
-        reference2 = FirebaseDatabase.getInstance().getReference("Good").child(postId).child(userId);
-        reference2.addListenerForSingleValueEvent(new ValueEventListener() {
+        reference15 = FirebaseDatabase.getInstance().getReference("Good").child(postId).child(userId);
+        reference15.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 GoodItem item2 = snapshot.getValue(GoodItem.class);
                 if(item2 != null){
                     if(item2.getPress().equals("1")){
-                        reference = FirebaseDatabase.getInstance().getReference("Post").child(postId);
-                        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        reference16 = FirebaseDatabase.getInstance().getReference("Post").child(postId);
+                        reference16.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 PostItem item = snapshot.getValue(PostItem.class);
@@ -869,13 +1041,13 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                                 String goodcnt2 = Integer.toString(gcnt);
                                 item.setGoodcnt(goodcnt2);
 
-                                reference.setValue(item);
+                                reference16.setValue(item);
 
-                                reference = FirebaseDatabase.getInstance().getReference("Good").child(postId).child(userId);
+                                reference16 = FirebaseDatabase.getInstance().getReference("Good").child(postId).child(userId);
                                 HashMap result = new HashMap<>();
                                 result.put("press", "0");
 
-                                reference.setValue(result);
+                                reference16.setValue(result);
                                 list.get(0).setPress("0");
                                 //recyclerView.setAdapter(adapter);
                             }
@@ -888,8 +1060,8 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
 
                     }
                     else if(item2.getPress().equals("0")){
-                        reference = FirebaseDatabase.getInstance().getReference("Post").child(postId);
-                        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        reference16 = FirebaseDatabase.getInstance().getReference("Post").child(postId);
+                        reference16.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 PostItem item = snapshot.getValue(PostItem.class);
@@ -897,12 +1069,12 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                                 int gcnt = Integer.parseInt(goodcnt) + 1;
                                 String goodcnt2 = Integer.toString(gcnt);
                                 item.setGoodcnt(goodcnt2);
-                                reference.setValue(item);
+                                reference16.setValue(item);
 
-                                reference = FirebaseDatabase.getInstance().getReference("Good").child(postId).child(userId);
+                                reference16 = FirebaseDatabase.getInstance().getReference("Good").child(postId).child(userId);
                                 HashMap result = new HashMap<>();
                                 result.put("press", "1");
-                                reference.setValue(result);
+                                reference16.setValue(result);
                                 list.get(0).setPress("1");
 
                                 //recyclerView.setAdapter(adapter);
@@ -917,8 +1089,8 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                     }
                 }
                 else if(item2 == null){
-                    reference = FirebaseDatabase.getInstance().getReference("Post").child(postId);
-                    reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    reference16 = FirebaseDatabase.getInstance().getReference("Post").child(postId);
+                    reference16.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             PostItem item = snapshot.getValue(PostItem.class);
@@ -926,12 +1098,12 @@ public class FreeBoardDetailActivity extends AppCompatActivity {
                             int gcnt = Integer.parseInt(goodcnt) + 1;
                             String goodcnt2 = Integer.toString(gcnt);
                             item.setGoodcnt(goodcnt2);
-                            reference.setValue(item);
+                            reference16.setValue(item);
 
-                            reference = FirebaseDatabase.getInstance().getReference("Good").child(postId).child(userId);
+                            reference16 = FirebaseDatabase.getInstance().getReference("Good").child(postId).child(userId);
                             HashMap result = new HashMap<>();
                             result.put("press", "1");
-                            reference.setValue(result);
+                            reference16.setValue(result);
                             list.get(0).setPress("1");
 
                             //recyclerView.setAdapter(adapter);

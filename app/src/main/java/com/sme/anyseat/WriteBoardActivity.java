@@ -43,6 +43,7 @@ public class WriteBoardActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private DatabaseReference databaseReference2;
     private DatabaseReference databaseReference3;
+    private DatabaseReference databaseReference4;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseStorage storage;
 
@@ -62,6 +63,10 @@ public class WriteBoardActivity extends AppCompatActivity {
     private ArrayList<String> list2 = new ArrayList<>();
     //imagenamelist
     private ArrayList<String> list3 = new ArrayList<>();
+
+    private ArrayList<String> remainlist = new ArrayList<>();
+
+    private ArrayList<Integer> removelist = new ArrayList<>();
 
     //업로드된 사진 갯수
     private int cnt = 0;
@@ -91,123 +96,276 @@ public class WriteBoardActivity extends AppCompatActivity {
         completebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(postid != null){
-                    imagedelete(postid);
-                }
-
-                list2.clear();
                 cnt = 0;
-                //이미지 업로드
-                if(list.size() >= 2){   //이미지 파일 있을 때
-                    storage = FirebaseStorage.getInstance();
-                    StorageReference storageRef = storage.getReferenceFromUrl("gs://anyseat-4e964.appspot.com/");
+                list2.clear();
+                list3.clear();
 
-                    final ProgressDialog progressDialog = new ProgressDialog(WriteBoardActivity.this);
-                    progressDialog.setTitle("이미지 업로드");
-                    progressDialog.show();
+                if(postid == null){ //글쓰기
+                    //이미지 업로드
+                    if(list.size() >= 2){   //이미지 파일 있을 때
+                        storage = FirebaseStorage.getInstance();
+                        StorageReference storageRef = storage.getReferenceFromUrl("gs://smee-90a2d.appspot.com");
 
-                    for(int i = 0; i < list.size() - 1; i++){
-                        imagename = System.currentTimeMillis();
-                        list3.add(imagename+"");
-                        Uri file = list.get(i).getImageuri();
-                        //StorageReference riversRef = storageRef.child("images/"+file.getLastPathSegment());
-                        final StorageReference riversRef = storageRef.child("images/"+imagename);
-                        UploadTask uploadTask = riversRef.putFile(file);
-                        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                cnt++;
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(WriteBoardActivity.this, "업로드 실패!", Toast.LENGTH_SHORT).show();
-                            }
-                        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                                progressDialog.setMessage("업로드 중...");
-                            }
-                        });
+                        final ProgressDialog progressDialog = new ProgressDialog(WriteBoardActivity.this);
+                        progressDialog.setTitle("이미지 업로드");
+                        progressDialog.show();
 
-                        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                            @Override
-                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                                if(!task.isSuccessful()){
-                                    throw task.getException();
+                        for(int i = 0; i < list.size() - 1; i++){
+                            imagename = System.currentTimeMillis();
+                            list3.add(imagename+"");
+                            Uri file = list.get(i).getImageuri();
+                            //StorageReference riversRef = storageRef.child("images/"+file.getLastPathSegment());
+                            final StorageReference riversRef = storageRef.child("images/"+imagename);
+                            UploadTask uploadTask = riversRef.putFile(file);
+                            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    cnt++;
                                 }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(WriteBoardActivity.this, "업로드 실패!", Toast.LENGTH_SHORT).show();
+                                }
+                            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                                    progressDialog.setMessage("업로드 중...");
+                                }
+                            });
 
-                                return riversRef.getDownloadUrl();
-                            }
-                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Uri> task) {
-                                if(task.isSuccessful()){
+                            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                @Override
+                                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                    if(!task.isSuccessful()){
+                                        throw task.getException();
+                                    }
 
-                                    Uri downloadUri = task.getResult();
-                                    list2.add(downloadUri.toString());
+                                    return riversRef.getDownloadUrl();
+                                }
+                            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Uri> task) {
+                                    if(task.isSuccessful()){
 
-                                    if(cnt == list.size() - 1){ //이미지파일 업로드 완료 후 동작
-                                        progressDialog.dismiss();
-                                        postimage(postid, goodcnt, commentcnt);
+                                        Uri downloadUri = task.getResult();
+                                        list2.add(downloadUri.toString());
+
+                                        if(cnt == list.size() - 1){ //이미지파일 업로드 완료 후 동작
+                                            progressDialog.dismiss();
+                                            postimage(postid, goodcnt, commentcnt);
+                                        }
+                                    }
+                                    else{
+                                        //실패
                                     }
                                 }
-                                else{
-                                    //실패
-                                }
-                            }
-                        });
+                            });
+                        }
+                    }
+                    else{   //이미지 파일 없을 때
+                        String userid = mAuth.getCurrentUser().getUid();
+                        database = FirebaseDatabase.getInstance();
+                        if(postid == null){
+                            databaseReference = database.getReference("Post").push();
+                            String postid2 = databaseReference.getKey();
+
+                            time = System.currentTimeMillis();
+
+                            HashMap result = new HashMap<>();
+
+                            result.put("title", writetitle.getText().toString());
+                            result.put("contents", writecontents.getText().toString());
+                            result.put("writetime", makeTimeStamp(time));
+                            result.put("goodcnt", "0");
+                            result.put("commentcnt", "0");
+                            result.put("postid", postid2);
+                            result.put("userid", userid);
+                            result.put("imageexist", "0");
+                            result.put("imageurilist", list2);
+                            result.put("imagenamelist", list3);
+
+                            databaseReference.setValue(result);
+                            finish();
+                        }
+                        else{
+                            databaseReference = database.getReference("Post").child(postid);
+
+                            time = System.currentTimeMillis();
+
+                            HashMap result = new HashMap<>();
+
+                            result.put("title", writetitle.getText().toString());
+                            result.put("contents", writecontents.getText().toString());
+                            result.put("writetime", makeTimeStamp(time));
+                            result.put("goodcnt", goodcnt);
+                            result.put("commentcnt", commentcnt);
+                            result.put("postid", postid);
+                            result.put("userid", userid);
+                            result.put("imageexist", "0");
+                            result.put("imageurilist", list2);
+                            result.put("imagenamelist", list3);
+
+                            databaseReference.setValue(result);
+                            finish();
+                        }
                     }
                 }
-                else{   //이미지 파일 없을 때
-                    String userid = mAuth.getCurrentUser().getUid();
-                    database = FirebaseDatabase.getInstance();
-                    if(postid == null){
-                        databaseReference = database.getReference("Post").push();
-                        String postid2 = databaseReference.getKey();
+                else{   //수정
+                    remainlist.clear();
+                    removelist.clear();
+                    databaseReference4 = FirebaseDatabase.getInstance().getReference("Post").child(postid);
+                    databaseReference4.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            PostItem item = snapshot.getValue(PostItem.class);
+                            for(int k=0;k<item.getImagenamelist().size();k++){
+                                remainlist.add(item.getImagenamelist().get(k));
+                            }
+                            if(list.size() >= 2){   //이미지 파일 있을 때
+                                storage = FirebaseStorage.getInstance();
+                                StorageReference storageRef = storage.getReferenceFromUrl("gs://smee-90a2d.appspot.com");
 
-                        time = System.currentTimeMillis();
+                                final ProgressDialog progressDialog = new ProgressDialog(WriteBoardActivity.this);
+                                progressDialog.setTitle("이미지 업로드");
+                                progressDialog.show();
 
-                        HashMap result = new HashMap<>();
+                                for(int i = 0; i < list.size() - 1; i++){
+                                    imagename = System.currentTimeMillis();
 
-                        result.put("title", writetitle.getText().toString());
-                        result.put("contents", writecontents.getText().toString());
-                        result.put("writetime", makeTimeStamp(time));
-                        result.put("goodcnt", "0");
-                        result.put("commentcnt", "0");
-                        result.put("postid", postid2);
-                        result.put("userid", userid);
-                        result.put("imageexist", "0");
-                        result.put("imageurilist", list2);
-                        result.put("imagenamelist", list3);
+                                    if(list.get(i).getImageuri().toString().contains("http")){  //기존 이미지
+                                        int index = 0;
+                                        for(int j=0;j<item.getImageurilist().size();j++){
+                                            if(list.get(i).getImageuri().toString().equals(item.getImageurilist().get(j))){
+                                                index = j;
+                                                removelist.add(index);
+                                                break;
+                                            }
+                                        }
 
-                        databaseReference.setValue(result);
-                        finish();
-                    }
-                    else{
-                        databaseReference = database.getReference("Post").child(postid);
+                                        list3.add(item.getImagenamelist().get(index));
+                                        list2.add(item.getImageurilist().get(index));
+                                        cnt++;
 
-                        time = System.currentTimeMillis();
+                                        if(cnt == list.size() - 1){ //이미지파일 업로드 완료 후 동작
+                                            progressDialog.dismiss();
+                                            postimage(postid, goodcnt, commentcnt);
+                                        }
+                                    }
+                                    else{   //새로운 이미지
+                                        list3.add(imagename+"");
+                                        Uri file = list.get(i).getImageuri();
+                                        //StorageReference riversRef = storageRef.child("images/"+file.getLastPathSegment());
+                                        final StorageReference riversRef = storageRef.child("images/"+imagename);
+                                        UploadTask uploadTask = riversRef.putFile(file);
+                                        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                            @Override
+                                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                cnt++;
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(WriteBoardActivity.this, "업로드 실패!", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                            @Override
+                                            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                                                progressDialog.setMessage("업로드 중...");
+                                            }
+                                        });
 
-                        HashMap result = new HashMap<>();
+                                        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                            @Override
+                                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                                if(!task.isSuccessful()){
+                                                    throw task.getException();
+                                                }
 
-                        result.put("title", writetitle.getText().toString());
-                        result.put("contents", writecontents.getText().toString());
-                        result.put("writetime", makeTimeStamp(time));
-                        result.put("goodcnt", goodcnt);
-                        result.put("commentcnt", commentcnt);
-                        result.put("postid", postid);
-                        result.put("userid", userid);
-                        result.put("imageexist", "0");
-                        result.put("imageurilist", list2);
-                        result.put("imagenamelist", list3);
+                                                return riversRef.getDownloadUrl();
+                                            }
+                                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Uri> task) {
+                                                if(task.isSuccessful()){
 
-                        databaseReference.setValue(result);
-                        finish();
-                    }
+                                                    Uri downloadUri = task.getResult();
+                                                    list2.add(downloadUri.toString());
 
+                                                    if(cnt == list.size() - 1){ //이미지파일 업로드 완료 후 동작
+                                                        progressDialog.dismiss();
+                                                        postimage(postid, goodcnt, commentcnt);
+                                                    }
+                                                }
+                                                else{
+                                                    //실패
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
 
+                            }
+                            else{   //이미지 파일 없을 때
 
+                                for(int i=0;i<item.getImagenamelist().size();i++){
+                                    imagedelete2(item.getImagenamelist().get(i));
+                                }
+
+                                String userid = mAuth.getCurrentUser().getUid();
+                                database = FirebaseDatabase.getInstance();
+                                if(postid == null){
+                                    databaseReference = database.getReference("Post").push();
+                                    String postid2 = databaseReference.getKey();
+
+                                    time = System.currentTimeMillis();
+
+                                    HashMap result = new HashMap<>();
+
+                                    result.put("title", writetitle.getText().toString());
+                                    result.put("contents", writecontents.getText().toString());
+                                    result.put("writetime", makeTimeStamp(time));
+                                    result.put("goodcnt", "0");
+                                    result.put("commentcnt", "0");
+                                    result.put("postid", postid2);
+                                    result.put("userid", userid);
+                                    result.put("imageexist", "0");
+                                    result.put("imageurilist", list2);
+                                    result.put("imagenamelist", list3);
+
+                                    databaseReference.setValue(result);
+                                    finish();
+                                }
+                                else{
+                                    databaseReference = database.getReference("Post").child(postid);
+
+                                    time = System.currentTimeMillis();
+
+                                    HashMap result = new HashMap<>();
+
+                                    result.put("title", writetitle.getText().toString());
+                                    result.put("contents", writecontents.getText().toString());
+                                    result.put("writetime", makeTimeStamp(time));
+                                    result.put("goodcnt", goodcnt);
+                                    result.put("commentcnt", commentcnt);
+                                    result.put("postid", postid);
+                                    result.put("userid", userid);
+                                    result.put("imageexist", "0");
+                                    result.put("imageurilist", list2);
+                                    result.put("imagenamelist", list3);
+
+                                    databaseReference.setValue(result);
+                                    finish();
+                                }
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
             }
         });
@@ -405,26 +563,26 @@ public class WriteBoardActivity extends AppCompatActivity {
             databaseReference.setValue(result);
             finish();
         }
-        /*databaseReference = database.getReference("Post").push();
-        String postid = databaseReference.getKey();
 
-        time = System.currentTimeMillis();
+        for(int i=0;i<remainlist.size();i++){
+            int check = -1;
+            for(int j=0;j<removelist.size();j++){
+                if(i == removelist.get(j)){
+                    check = 1;
+                    break;
+                }
+            }
+            if(check == -1){
+                imagedelete2(remainlist.get(i));
+            }
+        }
 
-        HashMap result = new HashMap<>();
+    }
 
-        result.put("title", writetitle.getText().toString());
-        result.put("contents", writecontents.getText().toString());
-        result.put("writetime", makeTimeStamp(time));
-        result.put("goodcnt", "0");
-        result.put("commentcnt", "0");
-        result.put("postid", postid);
-        result.put("userid", userid);
-        result.put("imageexist", "1");
-        result.put("imageurilist", list2);
-        result.put("imagenamelist", list3);
-
-        databaseReference.setValue(result);
-        finish();*/
+    private void imagedelete2(String imagename){
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://smee-90a2d.appspot.com").child("images/"+imagename);
+        storageRef.delete();
     }
 
     private void imagedelete(final String postid){
@@ -436,7 +594,7 @@ public class WriteBoardActivity extends AppCompatActivity {
                 if(item.getImageexist().equals("1")){//이미지가 있을 때
                     for(int i=0;i<item.getImagenamelist().size();i++){
                         storage = FirebaseStorage.getInstance();
-                        StorageReference storageRef = storage.getReferenceFromUrl("gs://anyseat-4e964.appspot.com/").child("images/"+item.getImagenamelist().get(i));
+                        StorageReference storageRef = storage.getReferenceFromUrl("gs://smee-90a2d.appspot.com").child("images/"+item.getImagenamelist().get(i));
                         storageRef.delete();
                     }
                 }
