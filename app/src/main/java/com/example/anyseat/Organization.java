@@ -3,7 +3,9 @@ package com.example.anyseat;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,12 +15,23 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class Organization extends AppCompatActivity {
 
+    ImageView tel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organization);
 
+
+        tel = findViewById(R.id.teltel);
+        tel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("tel:053-950-6571"));
+                startActivity(myIntent);
+
+            }
+        });
 
         ImageView btn = findViewById(R.id.origin_back);
         btn.setOnClickListener(new View.OnClickListener() {
@@ -35,7 +48,7 @@ public class Organization extends AppCompatActivity {
             public void onClick(View v) {
                 AlertDialog.Builder info = new AlertDialog.Builder(Organization.this, R.style.MyDialogTheme);
                 info.setTitle("지도교수 최두현");
-                info.setMessage("Phone : 010-XXXX-XXXX\nE-Mail : dhc@ee.knu.ac.kr");
+                info.setMessage("E-Mail : dhc@ee.knu.ac.kr");
                 info.setPositiveButton("확인", new DialogInterface.OnClickListener(){
 
                     @Override
@@ -59,7 +72,7 @@ public class Organization extends AppCompatActivity {
             public void onClick(View v) {
                 AlertDialog.Builder info = new AlertDialog.Builder(Organization.this, R.style.MyDialogTheme);
                 info.setTitle("조교 오은희");
-                info.setMessage("Phone : 010-XXXX-XXXX\nE-Mail : molla@mobile.com");
+                info.setMessage("Phone : 053-950-6571\nE-Mail : ehoh@knu.ac.kr");
                 info.setPositiveButton("확인", new DialogInterface.OnClickListener(){
 
                     @Override

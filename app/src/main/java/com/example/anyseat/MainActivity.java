@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final AlertDialog.Builder graduateCheckDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                /*final AlertDialog.Builder graduateCheckDialogBuilder = new AlertDialog.Builder(MainActivity.this, R.style.MyDialogTheme);
                 graduateCheckDialogBuilder.setTitle("재학 여부 확인");
                 graduateCheckDialogBuilder.setMessage("졸업생이신 경우 개발자에게 연락해주시면 졸업생 전용 아이디를 발급해드리겠습니다! 재학생이신 경우 OK 를 누르고 회원가입을 진행해 주세요!");
                 graduateCheckDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -100,7 +100,10 @@ public class MainActivity extends AppCompatActivity {
                 });
 
                 AlertDialog graduateCheckDialog = graduateCheckDialogBuilder.create();
-                graduateCheckDialog.show();
+                graduateCheckDialog.show();*/
+
+                Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
+                startActivity(intent);
 
             }
         });

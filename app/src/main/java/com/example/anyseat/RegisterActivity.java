@@ -66,7 +66,9 @@ public class RegisterActivity extends AppCompatActivity {
                     case R.id.forthGrade:
                         grade = 4;
                         break;
-
+                    case R.id.fiveGrade:
+                        grade = 5;
+                        break;
                 }
             }
         });

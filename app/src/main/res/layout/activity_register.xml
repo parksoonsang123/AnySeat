@@ -15,9 +15,10 @@
 
         <ImageView
             android:id="@+id/backbutton1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic__backward"
+            android:layout_width="40dp"
+            android:layout_height="35dp"
+            android:src="@drawable/ic_baseline_arrow_back_24"
+            android:gravity="center_horizontal"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="15dp"/>
 
@@ -115,8 +116,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/gradeGroup"
             android:layout_gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp">
+            android:orientation="vertical"
+            android:layout_marginTop="30dp">
 
             <RadioButton
                 android:layout_width="wrap_content"
@@ -126,33 +127,38 @@
                 android:layout_weight="1"
                 android:checked="true"
                 android:textColor="#696969"
-                android:layout_marginRight="5dp"/>
+                android:layout_marginBottom="4dp"/>
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2학년"
                 android:id="@+id/secondGrade"
+                android:layout_marginBottom="4dp"
                 android:layout_weight="1"
-                android:textColor="#696969"
-                android:layout_marginRight="5dp"
-                android:layout_marginLeft="5dp"/>
+                android:textColor="#696969"/>
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="3학년"
                 android:id="@+id/thirdGrade"
+                android:layout_marginBottom="4dp"
                 android:layout_weight="1"
-                android:textColor="#696969"
-                android:layout_marginRight="5dp"
-                android:layout_marginLeft="5dp"/>
+                android:textColor="#696969"/>
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="4학년"
                 android:id="@+id/forthGrade"
+                android:layout_marginBottom="4dp"
                 android:layout_weight="1"
-                android:textColor="#696969"
-                android:layout_marginLeft="5dp"/>
+                android:textColor="#696969"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="졸업생"
+                android:id="@+id/fiveGrade"
+                android:layout_weight="1"
+                android:textColor="#696969"/>
         </RadioGroup>
 
         <Button
@@ -162,7 +168,7 @@
             android:textStyle="bold"
             android:textColor="#ffffff"
             android:text="가입하기"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="30dp"
             android:layout_gravity="center"
             android:id="@+id/signButton"
             android:background="@drawable/signupbutton"/>

@@ -166,10 +166,16 @@ public class MyPageFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         SaveSharedPreference.setUserName(((MainActivity)MainActivity.context), "", "", false);
-                        Intent intent = new Intent(view.getContext(), MainActivity.class);
+                        /*Intent intent = new Intent(view.getContext(), MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        //
+                        startActivity(intent);*/
+                        startActivity(new Intent(view.getContext(), MainActivity.class)
+                                .setAction(Intent.ACTION_MAIN)
+                                .addCategory(Intent.CATEGORY_LAUNCHER)
+                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+
+                        System.exit(0);
+
                     }
                 });
                 logout.setNegativeButton("취소", new DialogInterface.OnClickListener() {
