@@ -13,6 +13,12 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.sme.anyseat.FreeBoardDetailActivity;
 import com.sme.anyseat.NoticeDetailActivity;
 import com.sme.anyseat.R;
@@ -23,6 +29,13 @@ import java.util.Map;
 
 public class FirebaseNotificationService extends FirebaseMessagingService {
 
+    int uidflag = 0;
+    String title;
+    String body;
+    String postid;
+    String type;
+    String alramid;
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
     public FirebaseNotificationService() {
     }
 
@@ -35,80 +48,90 @@ public class FirebaseNotificationService extends FirebaseMessagingService {
 
         if(data_notify != null){
             Log.e("FCMService","received");
-            String title = "";
-            String body = data_notify.get("contents");
-            String postid = data_notify.get("postid");
-            String type = data_notify.get("type");
-            String alramid = data_notify.get("alramid");
+            title = "";
+            body = data_notify.get("contents");
+            postid = data_notify.get("postid");
+            type = data_notify.get("type");
+            alramid = data_notify.get("alramid");
+            final String uid = mAuth.getCurrentUser().getUid();
 
-            if(type.equals("1")){
-                title = "게시글에 댓글이 달렸습니다.\n";
-                Intent intent = new Intent(getBaseContext(), FreeBoardDetailActivity.class);
-                intent.putExtra("postid", postid);
-                intent.putExtra("alram", "1");
-                intent.putExtra("alramid", alramid);
-                intent.setAction(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_LAUNCHER);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                /*intent.setAction(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_LAUNCHER);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);*/
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post").child(postid);
+            reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String postuid = snapshot.child("userid").getValue(String.class);
+                    if(postuid.equals(uid)){
+                        //uidflag = 1;
+                        if (type.equals("1")) {
+                            title = "게시글에 댓글이 달렸습니다.\n";
+                            Intent intent = new Intent(getBaseContext(), FreeBoardDetailActivity.class);
+                            intent.putExtra("postid", postid);
+                            intent.putExtra("alram", "1");
+                            intent.putExtra("alramid", alramid);
+                            intent.setAction(Intent.ACTION_MAIN);
+                            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-                //MainActivity2.alarmflag = 1;
+                            PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(),0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+                            String channelId = "mychannel";
 
-                String channelId = "mychannel";
+                            Uri defaultUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                            NotificationCompat.Builder notificationBuilder =
+                                    new NotificationCompat.Builder(getApplicationContext(), channelId)
+                                            .setSmallIcon(R.mipmap.ic_launcher)
+                                            .setContentTitle(title)
+                                            .setAutoCancel(true)
+                                            .setSound(defaultUri)
+                                            .setContentIntent(pendingIntent);
 
-                Uri defaultUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                NotificationCompat.Builder notificationBuilder =
-                        new NotificationCompat.Builder(this,channelId)
-                                .setSmallIcon(R.mipmap.ic_launcher)
-                                .setContentTitle(title)
-                                .setAutoCancel(true)
-                                .setSound(defaultUri)
-                                .setContentIntent(pendingIntent);
+                            NotificationManager notificationManger = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                String channelName = "channelName";
+                                NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH);
+                                notificationManger.createNotificationChannel(channel);
+                            }
+                            notificationManger.notify(0, notificationBuilder.build());
+                        } else {
+                            title = "새로운 공지사항이 있습니다.\n";
+                            Intent intent = new Intent(getBaseContext(), NoticeDetailActivity.class);
+                            intent.putExtra("postid", postid);
+                            intent.putExtra("alram", "1");
+                            intent.putExtra("alramid", alramid);
+                            intent.setAction(Intent.ACTION_MAIN);
+                            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-                NotificationManager notificationManger = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                    String channelName = "channelName";
-                    NotificationChannel channel = new NotificationChannel(channelId,channelName,NotificationManager.IMPORTANCE_HIGH);
-                    notificationManger.createNotificationChannel(channel);
+                            PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                            String channelId = "mychannel";
+
+                            Uri defaultUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                            NotificationCompat.Builder notificationBuilder =
+                                    new NotificationCompat.Builder(getApplicationContext(), channelId)
+                                            .setSmallIcon(R.mipmap.ic_launcher)
+                                            .setContentTitle(title)
+                                            .setAutoCancel(true)
+                                            .setSound(defaultUri)
+                                            .setContentIntent(pendingIntent);
+
+                            NotificationManager notificationManger = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                String channelName = "channelName";
+                                NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH);
+                                notificationManger.createNotificationChannel(channel);
+                            }
+                            notificationManger.notify(0, notificationBuilder.build());
+                        }
+                    }
                 }
-                notificationManger.notify(0,notificationBuilder.build());
-            }
-            else {
-                title = "새로운 공지사항이 있습니다.\n";
-                Intent intent = new Intent(getBaseContext(), NoticeDetailActivity.class);
-                intent.putExtra("postid", postid);
-                intent.putExtra("alram", "1");
-                intent.putExtra("alramid", alramid);
-                intent.setAction(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_LAUNCHER);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-                PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(),0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-                String channelId = "mychannel";
-
-                Uri defaultUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                NotificationCompat.Builder notificationBuilder =
-                        new NotificationCompat.Builder(this,channelId)
-                                .setSmallIcon(R.mipmap.ic_launcher)
-                                .setContentTitle(title)
-                                .setAutoCancel(true)
-                                .setSound(defaultUri)
-                                .setContentIntent(pendingIntent);
-
-                NotificationManager notificationManger = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                    String channelName = "channelName";
-                    NotificationChannel channel = new NotificationChannel(channelId,channelName,NotificationManager.IMPORTANCE_HIGH);
-                    notificationManger.createNotificationChannel(channel);
                 }
-                notificationManger.notify(0,notificationBuilder.build());
-            }
+            });
 
         }
     }

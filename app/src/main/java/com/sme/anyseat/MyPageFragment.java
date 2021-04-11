@@ -168,7 +168,7 @@ public class MyPageFragment extends Fragment {
                                 .setAction(Intent.ACTION_MAIN)
                                 .addCategory(Intent.CATEGORY_LAUNCHER)
                                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-
+                        //mAuth.signOut();
                         System.exit(0);
 
                     }
