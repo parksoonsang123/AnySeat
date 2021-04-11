@@ -106,7 +106,7 @@ public class WriteBoardActivity extends AppCompatActivity {
                         storage = FirebaseStorage.getInstance();
                         StorageReference storageRef = storage.getReferenceFromUrl("gs://smee-90a2d.appspot.com");
 
-                        final ProgressDialog progressDialog = new ProgressDialog(WriteBoardActivity.this);
+                        final ProgressDialog progressDialog = new ProgressDialog(WriteBoardActivity.this, R.style.MyDialogTheme);
                         progressDialog.setTitle("이미지 업로드");
                         progressDialog.show();
 
@@ -226,7 +226,7 @@ public class WriteBoardActivity extends AppCompatActivity {
                                 storage = FirebaseStorage.getInstance();
                                 StorageReference storageRef = storage.getReferenceFromUrl("gs://smee-90a2d.appspot.com");
 
-                                final ProgressDialog progressDialog = new ProgressDialog(WriteBoardActivity.this);
+                                final ProgressDialog progressDialog = new ProgressDialog(WriteBoardActivity.this, R.style.MyDialogTheme);
                                 progressDialog.setTitle("이미지 업로드");
                                 progressDialog.show();
 
