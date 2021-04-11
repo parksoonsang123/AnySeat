@@ -1,41 +1,41 @@
 {
   "project_info": {
-    "project_number": "250158547065",
-    "project_id": "anyseat-4e964",
-    "storage_bucket": "anyseat-4e964.appspot.com"
+    "project_number": "249934543200",
+    "project_id": "smee-90a2d",
+    "storage_bucket": "smee-90a2d.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:250158547065:android:2c43d0b716567dbaefd4a8",
+        "mobilesdk_app_id": "1:249934543200:android:b618207f8f4b7e5a53c605",
         "android_client_info": {
-          "package_name": "com.example.anyseat"
+          "package_name": "com.sme.anyseat"
         }
       },
       "oauth_client": [
         {
-          "client_id": "250158547065-bl1n00p0ddmgapll7vf2pl7pfh63n2iv.apps.googleusercontent.com",
+          "client_id": "249934543200-t20t886oa9as1eh7qs92ttdesq35amp8.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.anyseat",
-            "certificate_hash": "02f14163297096fbb84b8e784b5ccbc44bdafa10"
+            "package_name": "com.sme.anyseat",
+            "certificate_hash": "2262396ed1e732856cb11f3bcbf58dcd26117456"
           }
         },
         {
-          "client_id": "250158547065-21iq5a1fjhniql36976bergmsd8fs47h.apps.googleusercontent.com",
+          "client_id": "249934543200-f3cfdmn5ka2p2md2l2p8v2a83lrtngc9.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAcJPu--bgFiWGEkOkZ3jySyIEz1lfrTfo"
+          "current_key": "AIzaSyAtMVMKlhyFdy-_WTidk62XyFzOqx-pS4M"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "250158547065-21iq5a1fjhniql36976bergmsd8fs47h.apps.googleusercontent.com",
+              "client_id": "249934543200-f3cfdmn5ka2p2md2l2p8v2a83lrtngc9.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

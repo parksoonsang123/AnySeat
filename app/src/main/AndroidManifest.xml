@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.anyseat">
+    package="com.sme.anyseat">
 
     <application
         android:allowBackup="true"
@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".SplashActivity"
+        <activity android:name="com.sme.anyseat.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -22,53 +22,53 @@
 
 
         </activity>
-        <activity android:name=".AlramActivity" />
+        <activity android:name="com.sme.anyseat.AlramActivity" />
         <activity
-            android:name=".WriteNoticeActivity"
+            android:name="com.sme.anyseat.WriteNoticeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".NoticeDetailActivity"
+            android:name="com.sme.anyseat.NoticeDetailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MyPageActivity"
+            android:name="com.sme.anyseat.MyPageActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".FindUserActivity"
+            android:name="com.sme.anyseat.FindUserActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SearchActivity"
+            android:name="com.sme.anyseat.SearchActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MainActivity2"
+            android:name="com.sme.anyseat.MainActivity2"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Organization"
+            android:name="com.sme.anyseat.Organization"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".RegisterActivity"
+            android:name="com.sme.anyseat.RegisterActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.sme.anyseat.MainActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".OnlyImage"
+            android:name="com.sme.anyseat.OnlyImage"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".FreeBoardDetailActivity"
+            android:name="com.sme.anyseat.FreeBoardDetailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".WriteBoardActivity"
+            android:name="com.sme.anyseat.WriteBoardActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".FreeBoardActivity"
+            android:name="com.sme.anyseat.FreeBoardActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".HomepageActivity"
+            android:name="com.sme.anyseat.HomepageActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".NoticeActivity"
+            android:name="com.sme.anyseat.NoticeActivity"
             android:screenOrientation="portrait" />
 
         <meta-data
@@ -79,7 +79,7 @@
             android:value="false" />
 
         <service
-            android:name=".Notifications.FirebaseNotificationService"
+            android:name="com.sme.anyseat.Notifications.FirebaseNotificationService"
             android:stopWithTask="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
