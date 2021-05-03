@@ -113,6 +113,8 @@ public class WriteBoardActivity extends AppCompatActivity {
                         for(int i = 0; i < list.size() - 1; i++){
                             imagename = System.currentTimeMillis();
                             list3.add(imagename+"");
+
+
                             Uri file = list.get(i).getImageuri();
                             //StorageReference riversRef = storageRef.child("images/"+file.getLastPathSegment());
                             final StorageReference riversRef = storageRef.child("images/"+imagename);
@@ -120,7 +122,7 @@ public class WriteBoardActivity extends AppCompatActivity {
                             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    cnt++;
+
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -147,7 +149,7 @@ public class WriteBoardActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Uri> task) {
                                     if(task.isSuccessful()){
-
+                                        cnt++;
                                         Uri downloadUri = task.getResult();
                                         list2.add(downloadUri.toString());
 
@@ -261,7 +263,7 @@ public class WriteBoardActivity extends AppCompatActivity {
                                         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                             @Override
                                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                                cnt++;
+
                                             }
                                         }).addOnFailureListener(new OnFailureListener() {
                                             @Override
@@ -288,7 +290,7 @@ public class WriteBoardActivity extends AppCompatActivity {
                                             @Override
                                             public void onComplete(@NonNull Task<Uri> task) {
                                                 if(task.isSuccessful()){
-
+                                                    cnt++;
                                                     Uri downloadUri = task.getResult();
                                                     list2.add(downloadUri.toString());
 

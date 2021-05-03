@@ -118,7 +118,7 @@ public class WriteNoticeActivity extends AppCompatActivity {
                         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                cnt++;
+
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -145,7 +145,7 @@ public class WriteNoticeActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Uri> task) {
                                 if(task.isSuccessful()){
-
+                                    cnt++;
                                     Uri downloadUri = task.getResult();
                                     list2.add(downloadUri.toString());
 
