@@ -149,9 +149,10 @@ public class WriteBoardActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Uri> task) {
                                     if(task.isSuccessful()){
-                                        cnt++;
+
                                         Uri downloadUri = task.getResult();
                                         list2.add(downloadUri.toString());
+                                        cnt++;
 
                                         if(cnt == list.size() - 1){ //이미지파일 업로드 완료 후 동작
                                             progressDialog.dismiss();
@@ -290,9 +291,10 @@ public class WriteBoardActivity extends AppCompatActivity {
                                             @Override
                                             public void onComplete(@NonNull Task<Uri> task) {
                                                 if(task.isSuccessful()){
-                                                    cnt++;
+
                                                     Uri downloadUri = task.getResult();
                                                     list2.add(downloadUri.toString());
+                                                    cnt++;
 
                                                     if(cnt == list.size() - 1){ //이미지파일 업로드 완료 후 동작
                                                         progressDialog.dismiss();
